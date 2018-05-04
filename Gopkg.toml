@@ -29,6 +29,10 @@
   branch = "master"
   name = "github.com/vapor-ware/synse-sdk"
 
+[[constraint]]
+  name = "github.com/soniah/gosnmp"
+  branch = "master"
+
 [prune]
   go-tests = true
   unused-packages = true

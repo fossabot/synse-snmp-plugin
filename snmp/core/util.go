@@ -7,9 +7,11 @@ import (
 // This file contains utility functions. In the future we could put them in
 // a "library" repo.
 
-// TranslatePrintableASCII translates byte arrays from gosnmp to a printable string if possible.
-// If this call fails, the caller should normally just keep the raw byte array.
-// This call makes no attemp to support extended (8bit) ASCII.
+// TranslatePrintableASCII translates byte arrays from gosnmp to a printable
+// string if possible. If this call fails, the caller should normally just keep
+// the raw byte array. This call makes no attempt to support extended (8bit)
+// ASCII. We need this function since there is no differentiation between
+// strings and byte arrays in the SNMP protocol.
 func TranslatePrintableASCII(x interface{}) (string, error) {
 	bytes, ok := x.([]uint8)
 	if !ok {

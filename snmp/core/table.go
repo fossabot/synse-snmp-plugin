@@ -54,7 +54,6 @@ type SnmpTable struct {
 
 // DeviceEnumerator is the default SnmpTable Implementation of DeviceEnumerator that returns no devices.
 func (snmpTable *SnmpTable) DeviceEnumerator(data map[string]interface{}) ([]*config.DeviceConfig, error) {
-	fmt.Printf("Default SnmpTable DeviceEnumerator\n")
 	return []*config.DeviceConfig{}, nil
 }
 
@@ -68,7 +67,6 @@ type SnmpTableDefaultEnumerator struct{}
 
 // DeviceEnumerator is the default enumerator which returns no devices.
 func (enumerator SnmpTableDefaultEnumerator) DeviceEnumerator(data map[string]interface{}) ([]*config.DeviceConfig, error) {
-	fmt.Printf("SnmpTableDefaultEnumerator Default: %+v\n", enumerator)
 	return []*config.DeviceConfig{}, nil
 }
 
@@ -118,7 +116,7 @@ func NewSnmpTable(
 	return snmpTable, nil
 }
 
-// Dump to the log as CSV.
+// Dump to the log as CSV. Also to console.
 func (snmpTable *SnmpTable) Dump() {
 	// Header
 	logger.Debugf("Dumping %v table. %d rows. walk oid: %v",

@@ -58,9 +58,10 @@ func TestTable(t *testing.T) {
 
 	t.Logf("snmpServer: %+v", snmpServer)
 
-	// Create SnmpTable for the UPS input power.
+	// Create SnmpTable similar to the table for the UPS input power.
+	// The table here has an empty DeviceEnumerator.
 	testUpsInputTable, err := NewSnmpTable(
-		"upsInputTable",         // Table name. Same as OID .1.3.6.1.2.1.33.1.3.3 (Walk OID)
+		"fakeTestUpsInputTable", // Table name. Same as OID .1.3.6.1.2.1.33.1.3.3 (Walk OID)
 		".1.3.6.1.2.1.33.1.3.3", // Walk OID
 		[]string{ // Column names
 			"upsInputLineIndex",
@@ -81,11 +82,15 @@ func TestTable(t *testing.T) {
 	testUpsInputTable.Dump()
 
 	// Call DeviceEnumerator for testUpsInputTable.
-	// This is currently the default which does nothing, but that may change.
-	fmt.Printf("Calling Device Enumerate()\n")
+	// It is currently the default which does nothing, unlike the real table defined under ups_mib.
 	fmt.Printf("testUpsInputTable: %v\n", testUpsInputTable)
-	_, err = testUpsInputTable.DevEnumerator.DeviceEnumerator(nil)
-	fmt.Printf("Called Device Enumerate()\n")
+	devices, err := testUpsInputTable.DevEnumerator.DeviceEnumerator(nil)
+	if devices == nil {
+		t.Fatal("devices is nil")
+	}
+	if len(devices) != 0 {
+		t.Fatalf("Should have zero devices enumerated, got %d", len(devices))
+	}
 	if err != nil {
 		t.Fatal(err)
 	}

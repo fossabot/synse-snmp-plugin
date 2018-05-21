@@ -65,8 +65,8 @@ func NewUpsBatteryTable(snmpServerBase *core.SnmpServerBase) (
 		return nil, err
 	}
 
-	// Override the default Device Enumerator
 	table = &UpsBatteryTable{SnmpTable: snmpTable}
+	// Override the default Device Enumerator
 	table.DevEnumerator = UpsBatteryTableDeviceEnumerator{table}
 	return table, nil
 }

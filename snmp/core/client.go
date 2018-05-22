@@ -125,6 +125,8 @@ func NewDeviceConfig(
 // GetDeviceConfig takes the instance configuration for an SNMP device and
 // parses it into a DeviceConfig struct, filling in default values for anything
 // that is missing and has a default value defined.
+// This is just a deserializer which creates a DeviceConfig from
+// map[string]string.
 func GetDeviceConfig(instanceData map[string]string) (*DeviceConfig, error) {
 
 	// Parse out each field. The contructor call will check the parameters.
@@ -184,6 +186,36 @@ func GetDeviceConfig(instanceData map[string]string) (*DeviceConfig, error) {
 		port,
 		securityParameters,
 		contextName)
+}
+
+// ToMap serializes DeviceConfig to map[string]string.
+func (deviceConfig *DeviceConfig) ToMap() (m map[string]string, err error) {
+
+	if deviceConfig.SecurityParameters == nil {
+		return nil, fmt.Errorf("No security parameters")
+	}
+
+	m = make(map[string]string)
+	m["version"] = deviceConfig.Version
+	m["endpoint"] = deviceConfig.Endpoint
+	m["port"] = fmt.Sprintf("%d", deviceConfig.Port)
+	m["contextName"] = deviceConfig.ContextName
+
+	securityParameters := deviceConfig.SecurityParameters
+	m["userName"] = securityParameters.UserName
+	if securityParameters.AuthenticationProtocol == MD5 {
+		m["authenticationProtocol"] = "MD5"
+	} else if securityParameters.AuthenticationProtocol == SHA {
+		m["authenticationProtocol"] = "SHA"
+	}
+	m["authenticationPassphrase"] = securityParameters.AuthenticationPassphrase
+	if securityParameters.PrivacyProtocol == DES {
+		m["privacyProtocol"] = "DES"
+	} else if securityParameters.PrivacyProtocol == AES {
+		m["privacyProtocol"] = "AES"
+	}
+	m["privacyPassphrase"] = securityParameters.PrivacyPassphrase
+	return m, nil
 }
 
 // SnmpClient is a thin wrapper around gosnmp.

@@ -36,7 +36,8 @@ func TestClient(t *testing.T) {
 		t.Fatal(err) // Fail the test.
 	}
 
-	t.Logf("config: %+v", config)
+	t.Logf("SSS: valid config: %+v", config)
+	t.Logf("SSS: valid config security parameters: %+v", config.SecurityParameters)
 
 	// Create a client.
 	client, err := NewSnmpClient(config)
@@ -355,5 +356,85 @@ func TestConfigMapForgotContextName(t *testing.T) {
 		t.Logf("got error: %v", err)
 		// We should not expect an error here:
 		t.Fatalf("Expected no error, got %v", err.Error())
+	}
+}
+
+// Test a valid configuration with an additional field.
+// The additional field should be ignored.
+func TestValidConfigMapShaAesExtraField(t *testing.T) {
+	yamlConfig := map[string]string{
+		"version":                  "v3",
+		"endpoint":                 "127.0.0.1",
+		"port":                     "1024",
+		"userName":                 "simulator",
+		"authenticationProtocol":   "SHA",
+		"authenticationPassphrase": "auctorias",
+		"privacyProtocol":          "AES",
+		"privacyPassphrase":        "privatus",
+		"contextName":              "public",
+		"extraBaggage":             "anything",
+	}
+	// actual is a SNMP DeviceConfig created by the constructor.
+	actual, err := GetDeviceConfig(yamlConfig)
+	if err != nil {
+		t.Fatal(err) // Fail test.
+	}
+	t.Logf("deviceConfig: %+v", actual)
+
+	// Test each field against expected.
+	expected := getExpectedConfigShaAes()
+	err = verifyConfig(expected, actual)
+	if err != nil {
+		t.Fatal(err) // Fail test.
+	}
+}
+
+// TestDeviceConfigSerialization tests serialization to and from a map[string]string.
+func TestDeviceConfigSerialization(t *testing.T) {
+	// Create SecurityParameters for the config that should connect to the emulator.
+	securityParameters, err := NewSecurityParameters(
+		"simulator",  // User Name
+		SHA,          // Authentication Protocol
+		"auctoritas", // Authentication Passphrase
+		AES,          // Privacy Protocol
+		"privatus")   // Privacy Passphrase
+	if err != nil {
+		t.Fatal(err) // Fail the test.
+	}
+
+	t.Logf("securityParameters: %+v", securityParameters)
+
+	// Create a config.
+	config, err := NewDeviceConfig(
+		"v3",        // SNMP v3
+		"127.0.0.1", // Endpoint
+		1024,        // Port
+		securityParameters,
+		"public") //  Context name
+	if err != nil {
+		t.Fatal(err) // Fail the test.
+	}
+
+	t.Logf("FFF: valid config: %+v", config)
+	t.Logf("FFF: valid config security parameters: %+v", config.SecurityParameters)
+
+	// Serialize
+	serialized, err := config.ToMap()
+	if err != nil {
+		t.Fatal(err) // Fail the test.
+	}
+	t.Logf("serialized: %+v", serialized)
+
+	// Deserialize
+	deserialized, err := GetDeviceConfig(serialized)
+	if err != nil {
+		t.Fatal(err) // Fail the test.
+	}
+	t.Logf("deserialized: %+v", deserialized)
+
+	// Compare. config is the expected (original), deserialized is actual.
+	err = verifyConfig(config, deserialized)
+	if err != nil {
+		t.Fatal(err) // Fail test.
 	}
 }

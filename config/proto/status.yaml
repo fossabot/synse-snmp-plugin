@@ -1,0 +1,9 @@
+version: 1.0
+prototypes:
+  - type: status
+    model: SNMP # TODO: Check to see that this is overridden.
+    manufacturer: SNMP # TODO: Check to see that this is overridden.
+    protocol: SNMP
+    output:
+      - type: status
+        data_type: string

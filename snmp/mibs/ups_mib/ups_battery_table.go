@@ -122,6 +122,7 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 			"table_name": table.Name,
 			"row":        "0",
 			"column":     "2",
+			"oid":        fmt.Sprintf(table.Rows[0].BaseOid, 2), // base_oid and integer column.
 		},
 	}
 	devices = append(devices, &device2)
@@ -142,6 +143,7 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 			"table_name": table.Name,
 			"row":        "0",
 			"column":     "3",
+			"oid":        fmt.Sprintf(table.Rows[0].BaseOid, 3), // base_oid and integer column.
 		},
 	}
 	devices = append(devices, &device3)
@@ -162,6 +164,7 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 			"table_name": table.Name,
 			"row":        "0",
 			"column":     "4",
+			"oid":        fmt.Sprintf(table.Rows[0].BaseOid, 4), // base_oid and integer column.
 		},
 	}
 	devices = append(devices, &device4)
@@ -182,6 +185,7 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 			"table_name": table.Name,
 			"row":        "0",
 			"column":     "5",
+			"oid":        fmt.Sprintf(table.Rows[0].BaseOid, 5), // base_oid and integer column.
 		},
 	}
 	devices = append(devices, &device5)
@@ -202,6 +206,7 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 			"table_name": table.Name,
 			"row":        "0",
 			"column":     "6",
+			"oid":        fmt.Sprintf(table.Rows[0].BaseOid, 6), // base_oid and integer column.
 		},
 	}
 	devices = append(devices, &device6)
@@ -222,6 +227,7 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 			"table_name": table.Name,
 			"row":        "0",
 			"column":     "7",
+			"oid":        fmt.Sprintf(table.Rows[0].BaseOid, 7), // base_oid and integer column.
 		},
 	}
 	devices = append(devices, &device7)

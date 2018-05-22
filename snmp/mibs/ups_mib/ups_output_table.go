@@ -73,6 +73,7 @@ func (enumerator UpsOutputTableDeviceEnumerator) DeviceEnumerator(
 				"table_name": table.Name,
 				"row":        fmt.Sprintf("%d", i),
 				"column":     "2",
+				"oid":        fmt.Sprintf(table.Rows[i].BaseOid, 2), // base_oid and integer column.
 			},
 		}
 		devices = append(devices, &device)
@@ -93,6 +94,7 @@ func (enumerator UpsOutputTableDeviceEnumerator) DeviceEnumerator(
 				"table_name": table.Name,
 				"row":        fmt.Sprintf("%d", i),
 				"column":     "3",
+				"oid":        fmt.Sprintf(table.Rows[i].BaseOid, 3), // base_oid and integer column.
 			},
 		}
 		devices = append(devices, &device2)
@@ -113,6 +115,7 @@ func (enumerator UpsOutputTableDeviceEnumerator) DeviceEnumerator(
 				"table_name": table.Name,
 				"row":        fmt.Sprintf("%d", i),
 				"column":     "4",
+				"oid":        fmt.Sprintf(table.Rows[i].BaseOid, 4), // base_oid and integer column.
 			},
 		}
 		devices = append(devices, &device3)
@@ -133,6 +136,7 @@ func (enumerator UpsOutputTableDeviceEnumerator) DeviceEnumerator(
 				"table_name": table.Name,
 				"row":        fmt.Sprintf("%d", i),
 				"column":     "5",
+				"oid":        fmt.Sprintf(table.Rows[i].BaseOid, 5), // base_oid and integer column.
 			},
 		}
 		devices = append(devices, &device4)

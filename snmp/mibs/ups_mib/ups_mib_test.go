@@ -149,9 +149,10 @@ func TestUpsMib(t *testing.T) { // nolint: gocyclo
 
 	fmt.Printf("Dumping devices enumerated from UPS-MIB\n")
 	for i := 0; i < len(devices); i++ {
-		fmt.Printf("UPS-MIB device[%d]: %v %v %v row:%v column:%v\n", i,
+		fmt.Printf("UPS-MIB device[%d]: %v %v %v %v row:%v column:%v\n", i,
 			devices[i].Data["table_name"],
 			devices[i].Data["info"],
+			devices[i].Data["oid"],
 			devices[i].Data["base_oid"],
 			devices[i].Data["row"],
 			devices[i].Data["column"])

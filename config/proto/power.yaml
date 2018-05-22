@@ -1,0 +1,13 @@
+version: 1.0
+prototypes:
+  - type: power
+    model: SNMP # TODO: Check to see that this is overridden.
+    manufacturer: SNMP # TODO: Check to see that this is overridden.
+    protocol: SNMP
+    output:
+      - type: power
+        data_type: float
+        unit:
+          name: watts # TODO: Some power will be watts, some VA. How to differntiate?
+          symbol: W
+        precision: 3

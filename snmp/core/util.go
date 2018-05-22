@@ -7,6 +7,29 @@ import (
 // This file contains utility functions. In the future we could put them in
 // a "library" repo.
 
+// CopyMapStringString returns a copy of the map passed in without error.
+func CopyMapStringString(m map[string]string) map[string]string {
+	target := make(map[string]string)
+	for k, v := range m {
+		target[k] = v
+	}
+	return target
+}
+
+// MergeMapStringString returns a new map with the contents of both maps passed
+// in. Errors out on duplicate keys.
+func MergeMapStringString(a map[string]string, b map[string]string) (map[string]string, error) {
+	merged := CopyMapStringString(a)
+	for k, v := range b {
+		_, inMap := merged[k]
+		if inMap {
+			return nil, fmt.Errorf("Key %v already in merged map: %v", k, merged)
+		}
+		merged[k] = v
+	}
+	return merged, nil
+}
+
 // TranslatePrintableASCII translates byte arrays from gosnmp to a printable
 // string if possible. If this call fails, the caller should normally just keep
 // the raw byte array. This call makes no attempt to support extended (8bit)

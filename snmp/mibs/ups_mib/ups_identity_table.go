@@ -136,13 +136,37 @@ func (enumerator UpsIdentityTableDeviceEnumerator) DeviceEnumerator(
 	data map[string]interface{}) (devices []*config.DeviceConfig, err error) {
 	fmt.Printf("ZZZ: Override: UpsBatteryIdentityDeviceEnumerator, enumerator.Table: %+v\n", enumerator.Table)
 
+	// Pull out the table, mib, device model, SNMP DeviceConfig.
 	table := enumerator.Table
 	mib := table.Mib.(*UpsMib)
 	model := mib.UpsIdentityTable.UpsIdentity.Model
 
+	snmpDeviceConfigMap, err := table.SnmpServerBase.DeviceConfig.ToMap()
+	if err != nil {
+		return nil, err
+	}
+	fmt.Printf("DDD: snmpDeviceConfigMap: %+v\n", snmpDeviceConfigMap)
+
 	// This is always a single row table.
 
 	// upsIdentManufacturer
+	// deviceData gets shimmed into the DeviceConfig for each synse device.
+	// It varies slightly for each device below.
+	deviceData := map[string]string{
+		"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
+		"info":       "upsIdentManufacturer",
+		"base_oid":   table.Rows[0].BaseOid,
+		"table_name": table.Name,
+		"row":        "0",
+		"column":     "1",
+		"oid":        fmt.Sprintf(table.Rows[0].BaseOid, 1), // base_oid and integer column.
+	}
+	deviceData, err = core.MergeMapStringString(snmpDeviceConfigMap, deviceData)
+	if err != nil {
+		return nil, err
+	}
+
+	// Create the synse device.
 	device := config.DeviceConfig{
 		Version: "1",
 		Type:    "identity", // TODO: This is new for synse.
@@ -151,19 +175,25 @@ func (enumerator UpsIdentityTableDeviceEnumerator) DeviceEnumerator(
 			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
 			Board: "TODO", // TODO: Needs to be passed in by whatever doles out the board ids.
 		},
-		Data: map[string]string{
-			"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
-			"info":       "upsIdentManufacturer",
-			"base_oid":   table.Rows[0].BaseOid,
-			"table_name": table.Name,
-			"row":        "0",
-			"column":     "1",
-			"oid":        fmt.Sprintf(table.Rows[0].BaseOid, 1), // base_oid and integer column.
-		},
+		Data: deviceData,
 	}
 	devices = append(devices, &device)
 
 	// upsIdentModel
+	deviceData = map[string]string{
+		"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
+		"info":       "upsIdentModel",
+		"base_oid":   table.Rows[0].BaseOid,
+		"table_name": table.Name,
+		"row":        "0",
+		"column":     "2",
+		"oid":        fmt.Sprintf(table.Rows[0].BaseOid, 2), // base_oid and integer column.
+	}
+	deviceData, err = core.MergeMapStringString(snmpDeviceConfigMap, deviceData)
+	if err != nil {
+		return nil, err
+	}
+
 	device2 := config.DeviceConfig{
 		Version: "1",
 		Type:    "identity", // TODO: This is new for synse.
@@ -172,19 +202,25 @@ func (enumerator UpsIdentityTableDeviceEnumerator) DeviceEnumerator(
 			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
 			Board: "TODO", // TODO: Needs to be passed in by whatever doles out the board ids.
 		},
-		Data: map[string]string{
-			"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
-			"info":       "upsIdentModel",
-			"base_oid":   table.Rows[0].BaseOid,
-			"table_name": table.Name,
-			"row":        "0",
-			"column":     "2",
-			"oid":        fmt.Sprintf(table.Rows[0].BaseOid, 2), // base_oid and integer column.
-		},
+		Data: deviceData,
 	}
 	devices = append(devices, &device2)
 
 	// upsIdentUPSSoftwareVersion
+	deviceData = map[string]string{
+		"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
+		"info":       "upsIdentSoftwareVersion",
+		"base_oid":   table.Rows[0].BaseOid,
+		"table_name": table.Name,
+		"row":        "0",
+		"column":     "3",
+		"oid":        fmt.Sprintf(table.Rows[0].BaseOid, 3), // base_oid and integer column.
+	}
+	deviceData, err = core.MergeMapStringString(snmpDeviceConfigMap, deviceData)
+	if err != nil {
+		return nil, err
+	}
+
 	device3 := config.DeviceConfig{
 		Version: "1",
 		Type:    "identity", // TODO: This is new for synse.
@@ -193,19 +229,25 @@ func (enumerator UpsIdentityTableDeviceEnumerator) DeviceEnumerator(
 			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
 			Board: "TODO", // TODO: Needs to be passed in by whatever doles out the board ids.
 		},
-		Data: map[string]string{
-			"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
-			"info":       "upsIdentUPSSoftwareVersion",
-			"base_oid":   table.Rows[0].BaseOid,
-			"table_name": table.Name,
-			"row":        "0",
-			"column":     "3",
-			"oid":        fmt.Sprintf(table.Rows[0].BaseOid, 3), // base_oid and integer column.
-		},
+		Data: deviceData,
 	}
 	devices = append(devices, &device3)
 
-	// upsIdentAgentSoftwareVersion
+	// upsIdentAgentSoftwareVersion ----------------------------------------------
+	deviceData = map[string]string{
+		"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
+		"info":       "upsIdentAgentSoftwareVersion",
+		"base_oid":   table.Rows[0].BaseOid,
+		"table_name": table.Name,
+		"row":        "0",
+		"column":     "4",
+		"oid":        fmt.Sprintf(table.Rows[0].BaseOid, 4), // base_oid and integer column.
+	}
+	deviceData, err = core.MergeMapStringString(snmpDeviceConfigMap, deviceData)
+	if err != nil {
+		return nil, err
+	}
+
 	device4 := config.DeviceConfig{
 		Version: "1",
 		Type:    "identity", // TODO: This is new for synse.
@@ -214,19 +256,25 @@ func (enumerator UpsIdentityTableDeviceEnumerator) DeviceEnumerator(
 			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
 			Board: "TODO", // TODO: Needs to be passed in by whatever doles out the board ids.
 		},
-		Data: map[string]string{
-			"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
-			"info":       "upsIdentAgentSoftwareVersion",
-			"base_oid":   table.Rows[0].BaseOid,
-			"table_name": table.Name,
-			"row":        "0",
-			"column":     "4",
-			"oid":        fmt.Sprintf(table.Rows[0].BaseOid, 4), // base_oid and integer column.
-		},
+		Data: deviceData,
 	}
 	devices = append(devices, &device4)
 
-	// upsIdentName
+	// upsIdentName ---------------------------------------------------------------
+	deviceData = map[string]string{
+		"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
+		"info":       "upsIdentName",
+		"base_oid":   table.Rows[0].BaseOid,
+		"table_name": table.Name,
+		"row":        "0",
+		"column":     "5",
+		"oid":        fmt.Sprintf(table.Rows[0].BaseOid, 5), // base_oid and integer column.
+	}
+	deviceData, err = core.MergeMapStringString(snmpDeviceConfigMap, deviceData)
+	if err != nil {
+		return nil, err
+	}
+
 	device5 := config.DeviceConfig{
 		Version: "1",
 		Type:    "identity", // TODO: This is new for synse.
@@ -235,19 +283,25 @@ func (enumerator UpsIdentityTableDeviceEnumerator) DeviceEnumerator(
 			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
 			Board: "TODO", // TODO: Needs to be passed in by whatever doles out the board ids.
 		},
-		Data: map[string]string{
-			"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
-			"info":       "upsIdentName",
-			"base_oid":   table.Rows[0].BaseOid,
-			"table_name": table.Name,
-			"row":        "0",
-			"column":     "5",
-			"oid":        fmt.Sprintf(table.Rows[0].BaseOid, 5), // base_oid and integer column.
-		},
+		Data: deviceData,
 	}
 	devices = append(devices, &device5)
 
-	// upsIdentAttachedDevices
+	// upsIdentAttachedDevices ----------------------------------------------------
+	deviceData = map[string]string{
+		"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
+		"info":       "upsIdentAttacheDevices",
+		"base_oid":   table.Rows[0].BaseOid,
+		"table_name": table.Name,
+		"row":        "0",
+		"column":     "6",
+		"oid":        fmt.Sprintf(table.Rows[0].BaseOid, 6), // base_oid and integer column.
+	}
+	deviceData, err = core.MergeMapStringString(snmpDeviceConfigMap, deviceData)
+	if err != nil {
+		return nil, err
+	}
+
 	device6 := config.DeviceConfig{
 		Version: "1",
 		Type:    "identity", // TODO: This is new for synse.
@@ -256,15 +310,7 @@ func (enumerator UpsIdentityTableDeviceEnumerator) DeviceEnumerator(
 			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
 			Board: "TODO", // TODO: Needs to be passed in by whatever doles out the board ids.
 		},
-		Data: map[string]string{
-			"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
-			"info":       "upsIdentAgentSoftwareVersion",
-			"base_oid":   table.Rows[0].BaseOid,
-			"table_name": table.Name,
-			"row":        "0",
-			"column":     "6",
-			"oid":        fmt.Sprintf(table.Rows[0].BaseOid, 6), // base_oid and integer column.
-		},
+		Data: deviceData,
 	}
 	devices = append(devices, &device6)
 

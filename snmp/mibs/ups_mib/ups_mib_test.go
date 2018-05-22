@@ -146,6 +146,9 @@ func TestUpsMib(t *testing.T) { // nolint: gocyclo
 	if len(devices) == 0 {
 		t.Fatalf("Expected devices, got none.\n")
 	}
+	if len(devices) != 40 {
+		t.Fatalf("Expected 40 devices, got %d.\n", len(devices))
+	}
 
 	fmt.Printf("Dumping devices enumerated from UPS-MIB\n")
 	for i := 0; i < len(devices); i++ {
@@ -157,6 +160,9 @@ func TestUpsMib(t *testing.T) { // nolint: gocyclo
 			devices[i].Data["row"],
 			devices[i].Data["column"])
 	}
+
+	fmt.Printf("Dumping full first device data: %v\n", devices[0].Data)
+	fmt.Printf("Dumping second first device data: %v\n", devices[1].Data)
 
 	t.Logf("TestUpsMib end")
 }

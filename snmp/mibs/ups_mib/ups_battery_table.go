@@ -80,13 +80,37 @@ type UpsBatteryTableDeviceEnumerator struct {
 // DeviceEnumerator overrides the default SnmpTable device enumerator.
 func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 	data map[string]interface{}) (devices []*config.DeviceConfig, err error) {
+
+	// Pull out the table, mib, device model, SNMP DeviceConfig
 	table := enumerator.Table
 	mib := table.Mib.(*UpsMib)
-
-	// This is always a single row table.
 	model := mib.UpsIdentityTable.UpsIdentity.Model
 
+	snmpDeviceConfigMap, err := table.SnmpServerBase.DeviceConfig.ToMap()
+	if err != nil {
+		return nil, err
+	}
+	fmt.Printf("DDD: snmpDeviceConfigMap: %+v\n", snmpDeviceConfigMap)
+
+	// This is always a single row table.
+
 	// upsBatteryStatus
+	// deviceData gets shimmed into the DeviceConfig for each synse device.
+	// It varies slightly for each device below.
+	deviceData := map[string]string{
+		"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
+		"info":       "upsBatteryStatus",
+		"base_oid":   table.Rows[0].BaseOid,
+		"table_name": table.Name,
+		"row":        "0",
+		"column":     "1",
+		"oid":        fmt.Sprintf(table.Rows[0].BaseOid, 1), // base_oid and integer column.
+	}
+	deviceData, err = core.MergeMapStringString(snmpDeviceConfigMap, deviceData)
+	if err != nil {
+		return nil, err
+	}
+
 	device := config.DeviceConfig{
 		Version: "1",
 		Type:    "status", // TODO: This is new for synse.
@@ -95,18 +119,25 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
 			Board: "TODO", // TODO: Needs to be passed in by whatever doles out the board ids.
 		},
-		Data: map[string]string{
-			"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
-			"info":       "upsBatteryStatus",
-			"base_oid":   table.Rows[0].BaseOid,
-			"table_name": table.Name,
-			"row":        "0",
-			"column":     "1",
-		},
+		Data: deviceData,
 	}
 	devices = append(devices, &device)
 
-	// upsSecondsOnBattery
+	// upsSecondsOnBattery --------------------------------------------------------
+	deviceData = map[string]string{
+		"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
+		"info":       "upsSecondsOnBattery",
+		"base_oid":   table.Rows[0].BaseOid,
+		"table_name": table.Name,
+		"row":        "0",
+		"column":     "2",
+		"oid":        fmt.Sprintf(table.Rows[0].BaseOid, 2), // base_oid and integer column.
+	}
+	deviceData, err = core.MergeMapStringString(snmpDeviceConfigMap, deviceData)
+	if err != nil {
+		return nil, err
+	}
+
 	device2 := config.DeviceConfig{
 		Version: "1",
 		Type:    "status", // TODO: This is new for synse.
@@ -115,19 +146,25 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
 			Board: "TODO", // TODO: Needs to be passed in by whatever doles out the board ids.
 		},
-		Data: map[string]string{
-			"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
-			"info":       "upsSecondsOnBattery",
-			"base_oid":   table.Rows[0].BaseOid,
-			"table_name": table.Name,
-			"row":        "0",
-			"column":     "2",
-			"oid":        fmt.Sprintf(table.Rows[0].BaseOid, 2), // base_oid and integer column.
-		},
+		Data: deviceData,
 	}
 	devices = append(devices, &device2)
 
-	// upsEstimatedMinutesRemaining
+	// upsEstimatedMinutesRemaining -----------------------------------------------
+	deviceData = map[string]string{
+		"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
+		"info":       "upsEstimatedMinutesRemaining",
+		"base_oid":   table.Rows[0].BaseOid,
+		"table_name": table.Name,
+		"row":        "0",
+		"column":     "3",
+		"oid":        fmt.Sprintf(table.Rows[0].BaseOid, 3), // base_oid and integer column.
+	}
+	deviceData, err = core.MergeMapStringString(snmpDeviceConfigMap, deviceData)
+	if err != nil {
+		return nil, err
+	}
+
 	device3 := config.DeviceConfig{
 		Version: "1",
 		Type:    "status", // TODO: This is new for synse.
@@ -136,19 +173,25 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
 			Board: "TODO", // TODO: Needs to be passed in by whatever doles out the board ids.
 		},
-		Data: map[string]string{
-			"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
-			"info":       "upsEstimatedMinutesRemaining",
-			"base_oid":   table.Rows[0].BaseOid,
-			"table_name": table.Name,
-			"row":        "0",
-			"column":     "3",
-			"oid":        fmt.Sprintf(table.Rows[0].BaseOid, 3), // base_oid and integer column.
-		},
+		Data: deviceData,
 	}
 	devices = append(devices, &device3)
 
-	// upsEstimatedChargeRemaining
+	// upsEstimatedChargeRemaining ------------------------------------------------
+	deviceData = map[string]string{
+		"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
+		"info":       "upsEstimatedChargeRemaining",
+		"base_oid":   table.Rows[0].BaseOid,
+		"table_name": table.Name,
+		"row":        "0",
+		"column":     "4",
+		"oid":        fmt.Sprintf(table.Rows[0].BaseOid, 4), // base_oid and integer column.
+	}
+	deviceData, err = core.MergeMapStringString(snmpDeviceConfigMap, deviceData)
+	if err != nil {
+		return nil, err
+	}
+
 	device4 := config.DeviceConfig{
 		Version: "1",
 		Type:    "status", // TODO: This is new for synse.
@@ -157,19 +200,25 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
 			Board: "TODO", // TODO: Needs to be passed in by whatever doles out the board ids.
 		},
-		Data: map[string]string{
-			"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
-			"info":       "upsEstimatedChargeRemaining",
-			"base_oid":   table.Rows[0].BaseOid,
-			"table_name": table.Name,
-			"row":        "0",
-			"column":     "4",
-			"oid":        fmt.Sprintf(table.Rows[0].BaseOid, 4), // base_oid and integer column.
-		},
+		Data: deviceData,
 	}
 	devices = append(devices, &device4)
 
-	// upsBatteryVoltage
+	// upsBatteryVoltage ----------------------------------------------------------
+	deviceData = map[string]string{
+		"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
+		"info":       "upsBatteryVoltage",
+		"base_oid":   table.Rows[0].BaseOid,
+		"table_name": table.Name,
+		"row":        "0",
+		"column":     "5",
+		"oid":        fmt.Sprintf(table.Rows[0].BaseOid, 5), // base_oid and integer column.
+	}
+	deviceData, err = core.MergeMapStringString(snmpDeviceConfigMap, deviceData)
+	if err != nil {
+		return nil, err
+	}
+
 	device5 := config.DeviceConfig{
 		Version: "1",
 		Type:    "voltage",
@@ -178,19 +227,25 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
 			Board: "TODO", // TODO: Needs to be passed in by whatever doles out the board ids.
 		},
-		Data: map[string]string{
-			"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
-			"info":       "upsBatteryVoltage",
-			"base_oid":   table.Rows[0].BaseOid,
-			"table_name": table.Name,
-			"row":        "0",
-			"column":     "5",
-			"oid":        fmt.Sprintf(table.Rows[0].BaseOid, 5), // base_oid and integer column.
-		},
+		Data: deviceData,
 	}
 	devices = append(devices, &device5)
 
-	// upsBatteryCurrent
+	// upsBatteryCurrent ---------------------------------------------------------
+	deviceData = map[string]string{
+		"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
+		"info":       "upsBatteryCurrent",
+		"base_oid":   table.Rows[0].BaseOid,
+		"table_name": table.Name,
+		"row":        "0",
+		"column":     "6",
+		"oid":        fmt.Sprintf(table.Rows[0].BaseOid, 6), // base_oid and integer column.
+	}
+	deviceData, err = core.MergeMapStringString(snmpDeviceConfigMap, deviceData)
+	if err != nil {
+		return nil, err
+	}
+
 	device6 := config.DeviceConfig{
 		Version: "1",
 		Type:    "current",
@@ -199,19 +254,25 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
 			Board: "TODO", // TODO: Needs to be passed in by whatever doles out the board ids.
 		},
-		Data: map[string]string{
-			"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
-			"info":       "upsBatteryCurrent",
-			"base_oid":   table.Rows[0].BaseOid,
-			"table_name": table.Name,
-			"row":        "0",
-			"column":     "6",
-			"oid":        fmt.Sprintf(table.Rows[0].BaseOid, 6), // base_oid and integer column.
-		},
+		Data: deviceData,
 	}
 	devices = append(devices, &device6)
 
-	// upsBatteryVoltage
+	// upsBatteryTemperature  -----------------------------------------------------
+	deviceData = map[string]string{
+		"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
+		"info":       "upsBatteryTemperature",
+		"base_oid":   table.Rows[0].BaseOid,
+		"table_name": table.Name,
+		"row":        "0",
+		"column":     "7",
+		"oid":        fmt.Sprintf(table.Rows[0].BaseOid, 7), // base_oid and integer column.
+	}
+	deviceData, err = core.MergeMapStringString(snmpDeviceConfigMap, deviceData)
+	if err != nil {
+		return nil, err
+	}
+
 	device7 := config.DeviceConfig{
 		Version: "1",
 		Type:    "temperature",
@@ -220,15 +281,7 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
 			Board: "TODO", // TODO: Needs to be passed in by whatever doles out the board ids.
 		},
-		Data: map[string]string{
-			"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
-			"info":       "upsBatteryTemperature",
-			"base_oid":   table.Rows[0].BaseOid,
-			"table_name": table.Name,
-			"row":        "0",
-			"column":     "7",
-			"oid":        fmt.Sprintf(table.Rows[0].BaseOid, 7), // base_oid and integer column.
-		},
+		Data: deviceData,
 	}
 	devices = append(devices, &device7)
 

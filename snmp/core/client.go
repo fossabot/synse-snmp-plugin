@@ -240,7 +240,45 @@ type ReadResult struct {
 	Data interface{} // The data for the OID. See gosnmp decodeValue() https://github.com/soniah/gosnmp/blob/master/helper.go#L67
 }
 
-// Walk performs an SNMP bulk walk.
+// Get performs an SNMP get on the given OID.
+func (client *SnmpClient) Get(oid string) (result ReadResult, err error) {
+
+	goSnmp, err := client.createGoSNMP()
+	if err != nil {
+		return result, err
+	}
+
+	oids := []string{oid}
+	snmpPacket, err := goSnmp.Get(oids)
+	err2 := goSnmp.Conn.Close() // Do not leak connection.
+
+	// Return first error.
+	if err != nil {
+		return result, err
+	}
+	if err2 != nil {
+		return result, err2
+	}
+
+	data := snmpPacket.Variables[0]
+
+	// If it looks like an ASCII string, try to translate it.
+	if data.Type == gosnmp.OctetString {
+		ascii, err := TranslatePrintableASCII(data.Value)
+		if err == nil {
+			data.Value = ascii
+		}
+		// err above is deliberately ignored here. SNMP does not differentiate
+		// between ASCII strings and byte array.
+	}
+
+	return ReadResult{
+		Oid:  data.Name,
+		Data: data.Value,
+	}, nil
+}
+
+// Walk performs an SNMP bulk walk on the given OID.
 func (client *SnmpClient) Walk(rootOid string) (results []ReadResult, err error) {
 
 	goSnmp, err := client.createGoSNMP()

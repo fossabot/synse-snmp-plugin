@@ -220,17 +220,17 @@ func (deviceConfig *DeviceConfig) ToMap() (m map[string]string, err error) {
 
 // SnmpClient is a thin wrapper around gosnmp.
 type SnmpClient struct {
-	Config *DeviceConfig
+	DeviceConfig *DeviceConfig
 }
 
 // NewSnmpClient constructs SnmpClient.
-func NewSnmpClient(config *DeviceConfig) (*SnmpClient, error) {
-	if config == nil {
-		return nil, fmt.Errorf("config is nil")
+func NewSnmpClient(deviceConfig *DeviceConfig) (*SnmpClient, error) {
+	if deviceConfig == nil {
+		return nil, fmt.Errorf("deviceConfig is nil")
 	}
 
 	return &SnmpClient{
-		Config: config,
+		DeviceConfig: deviceConfig,
 	}, nil
 }
 
@@ -290,7 +290,7 @@ func (client *SnmpClient) createGoSNMP() (*gosnmp.GoSNMP, error) {
 	}
 
 	// Map DeviceConfig parameters to gosnmp parameters.
-	securityParameters := client.Config.SecurityParameters
+	securityParameters := client.DeviceConfig.SecurityParameters
 	var authProtocol gosnmp.SnmpV3AuthProtocol
 	var privProtocol gosnmp.SnmpV3PrivProtocol
 
@@ -311,20 +311,20 @@ func (client *SnmpClient) createGoSNMP() (*gosnmp.GoSNMP, error) {
 	}
 
 	goSnmp := &gosnmp.GoSNMP{
-		Target:        client.Config.Endpoint,
-		Port:          client.Config.Port,
+		Target:        client.DeviceConfig.Endpoint,
+		Port:          client.DeviceConfig.Port,
 		Version:       gosnmp.Version3,
-		Timeout:       client.Config.Timeout,
+		Timeout:       client.DeviceConfig.Timeout,
 		SecurityModel: gosnmp.UserSecurityModel,
 		MsgFlags:      gosnmp.AuthPriv,
 		SecurityParameters: &gosnmp.UsmSecurityParameters{
-			UserName:                 client.Config.SecurityParameters.UserName,
+			UserName:                 client.DeviceConfig.SecurityParameters.UserName,
 			AuthenticationProtocol:   authProtocol,
-			AuthenticationPassphrase: client.Config.SecurityParameters.AuthenticationPassphrase,
+			AuthenticationPassphrase: client.DeviceConfig.SecurityParameters.AuthenticationPassphrase,
 			PrivacyProtocol:          privProtocol,
-			PrivacyPassphrase:        client.Config.SecurityParameters.PrivacyPassphrase,
+			PrivacyPassphrase:        client.DeviceConfig.SecurityParameters.PrivacyPassphrase,
 		},
-		ContextName: client.Config.ContextName,
+		ContextName: client.DeviceConfig.ContextName,
 	}
 
 	// Connect

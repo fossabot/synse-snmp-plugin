@@ -158,7 +158,7 @@ func (enumerator UpsIdentityTableDeviceEnumerator) DeviceEnumerator(
 			"table_name": table.Name,
 			"row":        "0",
 			"column":     "1",
-      "oid": fmt.Sprintf(base_oid, 1) // base_oid and integer column.
+			"oid":        fmt.Sprintf(table.Rows[0].BaseOid, 1), // base_oid and integer column.
 		},
 	}
 	devices = append(devices, &device)

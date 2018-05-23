@@ -12,9 +12,9 @@ import (
 	"github.com/vapor-ware/synse-snmp-plugin/snmp/mibs/ups_mib"
 )
 
-// FindDevicesByType returns all elements in a DeviceConfig array where the Type is t.
+// FindDevicesConfigsByType returns all elements in a DeviceConfig array where the Type is t.
 // TODO: Could some of these be SDK helper functions? No idea if the answer is yes or no.
-func FindDevicesByType(devices []*config.DeviceConfig, t string) (matches []*config.DeviceConfig, err error) {
+func FindDeviceConfigsByType(devices []*config.DeviceConfig, t string) (matches []*config.DeviceConfig, err error) {
 	if devices == nil {
 		return nil, fmt.Errorf("devices is nil")
 	}
@@ -28,7 +28,7 @@ func FindDevicesByType(devices []*config.DeviceConfig, t string) (matches []*con
 }
 
 // DumpDevices utility function.
-func DumpDevices(devices []*config.DeviceConfig, header string) {
+func DumpDeviceConfigs(devices []*config.DeviceConfig, header string) {
 	fmt.Printf("Dumping Devices. ")
 	fmt.Print(header)
 
@@ -58,8 +58,8 @@ func ParsePrototypeConfigs(prototypeDirectory string) (prototypeConfigs []*confi
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("pwd is: %v\n", pwd)
 
+	fmt.Printf("pwd is: %v\n", pwd)
 	fmt.Printf("prototypeDirectory is: %v\n", prototypeDirectory)
 
 	// ls in the correct directory.
@@ -105,6 +105,63 @@ func FindPrototypeConfigByType(prototypeConfigs []*config.PrototypeConfig, t str
 	}
 	return nil
 }
+
+/*
+// ParseDeviceConfigs is a wrapper around config.ParseDeviceConfig() that
+// takes a directory parameter for sanity.
+func ParseDeviceConfigs(deviceDirectory string) (deviceConfigs []*config.DeviceConfig, err error) {
+	pwd, err := os.Getwd()
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Printf("pwd is: %v\n", pwd)
+	fmt.Printf("deviceDirectory is: %v\n", deviceDirectory)
+
+	// ls in the correct directory.
+	fmt.Printf("ls %v:\n", deviceDirectory)
+	files, err := ioutil.ReadDir(deviceDirectory)
+	if err != nil {
+		return nil, err
+	}
+	for _, file := range files {
+		fmt.Println(file.Name())
+	}
+
+	// Set EnvProtoPath.
+	err = os.Setenv(config.EnvDevicePath, deviceDirectory)
+	if err != nil {
+		return nil, err
+	}
+	// Unset env on exit.
+	defer func() {
+		_ = os.Unsetenv(config.EnvProtoPath)
+	}()
+
+	// Parse the Protoype configuration.
+	deviceConfigs, err = config.ParseDeviceConfig()
+	if err != nil {
+		return nil, err
+	}
+	for i := 0; i < len(deviceConfigs); i++ {
+		fmt.Printf("deviceConfigs[%d]: %+v\n", i, deviceConfigs[i])
+	}
+	return deviceConfigs, nil
+}
+
+// FindDeviceConfigByType finds a device config in the given set where Type matches t or nil if not found.
+func FindDeviceConfigByType(deviceConfigs []*config.DeviceConfig, t string) (deviceConfig *config.DeviceConfig) {
+	if deviceConfigs == nil {
+		return nil
+	}
+	for i := 0; i < len(deviceConfigs); i++ {
+		if deviceConfigs[i].Type == t {
+			return deviceConfigs[i]
+		}
+	}
+	return nil
+}
+*/
 
 // Initial device test. Ensure we can register each type the ups mib supports
 // and get a reading from each.
@@ -189,12 +246,13 @@ func TestDevices(t *testing.T) { // nolint: gocyclo
 	fmt.Printf("\n")
 
 	// TODO: Find all power devices. Get readings.
-	powerDevices, err := FindDevicesByType(devices, "power")
+
+	powerDevices, err := FindDeviceConfigsByType(devices, "power")
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	DumpDevices(powerDevices, "Power devices")
+	DumpDeviceConfigs(powerDevices, "Power device configs")
 
 	// Prototype configs are in ${PWD}/../config/proto
 	// In order to parse them, we need to set environment variable EnvProtoPath to the directory which is really funky.
@@ -207,6 +265,17 @@ func TestDevices(t *testing.T) { // nolint: gocyclo
 
 	powerPrototype := FindPrototypeConfigByType(prototypeConfigs, "power")
 	fmt.Printf("powerPrototype: %+v\n", powerPrototype)
+
+	/*
+		deviceConfigs, err := ParseDeviceConfigs(".")
+		if err != nil {
+			t.Fatal(err)
+		}
+		fmt.Printf("deviceConfigs: %+v\n", deviceConfigs)
+
+		powerDevice := FindDeviceConfigByType(deviceConfigs, "power")
+		fmt.Printf("powerDevice: %+v\n", powerDevice)
+	*/
 
 	/*
 			// TODO: Get readings for the power devices we've found.

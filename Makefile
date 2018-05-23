@@ -75,7 +75,7 @@ endif
 		--disable=gotype \
 		--tests \
 		--vendor \
-		--sort=severity \
+		--sort=path --sort=line \
 		--aggregate \
 		--deadline=5m || exit
 

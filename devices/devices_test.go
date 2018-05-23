@@ -13,7 +13,7 @@ import (
 )
 
 // FindDevicesByType returns all elements in a DeviceConfig array where the Type is t.
-// TODO: Could be an SDK helper function?
+// TODO: Could some of these be SDK helper functions? No idea if the answer is yes or no.
 func FindDevicesByType(devices []*config.DeviceConfig, t string) (matches []*config.DeviceConfig, err error) {
 	if devices == nil {
 		return nil, fmt.Errorf("devices is nil")
@@ -57,12 +57,9 @@ func ParsePrototypeConfigs(prototypeDirectory string) (prototypeConfigs []*confi
 	pwd, err := os.Getwd()
 	if err != nil {
 		return nil, err
-		//t.Fatal(err)
 	}
 	fmt.Printf("pwd is: %v\n", pwd)
 
-	//fmt.Printf("ls pwd:\n")
-	//prototypeDirectory := fmt.Sprintf("%v/../config/proto", pwd)
 	fmt.Printf("prototypeDirectory is: %v\n", prototypeDirectory)
 
 	// ls in the correct directory.
@@ -70,7 +67,6 @@ func ParsePrototypeConfigs(prototypeDirectory string) (prototypeConfigs []*confi
 	files, err := ioutil.ReadDir(prototypeDirectory)
 	if err != nil {
 		return nil, err
-		//t.Fatal(err)
 	}
 	for _, file := range files {
 		fmt.Println(file.Name())
@@ -79,7 +75,6 @@ func ParsePrototypeConfigs(prototypeDirectory string) (prototypeConfigs []*confi
 	// Set EnvProtoPath.
 	err = os.Setenv(config.EnvProtoPath, prototypeDirectory)
 	if err != nil {
-		//t.Fatal(err)
 		return nil, err
 	}
 	// Unset env on exit.
@@ -90,7 +85,6 @@ func ParsePrototypeConfigs(prototypeDirectory string) (prototypeConfigs []*confi
 	// Parse the Protoype configuration.
 	prototypeConfigs, err = config.ParsePrototypeConfig()
 	if err != nil {
-		//t.Fatal(err)
 		return nil, err
 	}
 	for i := 0; i < len(prototypeConfigs); i++ {
@@ -111,65 +105,6 @@ func FindPrototypeConfigByType(prototypeConfigs []*config.PrototypeConfig, t str
 	}
 	return nil
 }
-
-/*
-func loadPrototypeFile(directory string, deviceType string) (prototypeConfig *config.PrototypeConfig, err error) {
-	fmt.Printf("loading prototype file for deviceType: %v from directory %v\n",
-		deviceType, directory)
-	// TODO: Return the correct prototype and error.
-	pwd, err := os.Getwd()
-	if err != nil {
-		return nil, err
-	}
-	fmt.Printf("pwd is: %v\n", pwd)
-
-	fmt.Printf("ls pwd:\n")
-	files, err := ioutil.ReadDir(".")
-	if err != nil {
-		return nil, err
-	}
-	for _, file := range files {
-		fmt.Println(file.Name())
-	}
-
-	// ls in the correct directory.
-	fmt.Printf("ls %v:\n", directory)
-	files, err = ioutil.ReadDir(directory)
-	if err != nil {
-		return nil, err
-	}
-	for _, file := range files {
-		fmt.Println(file.Name())
-	}
-
-	// Create the yaml file name.
-	yamlFileName := fmt.Sprintf("%v.yaml", deviceType)
-	fmt.Printf("yaml file name is: %v\n", yamlFileName)
-	yamlFilePath := fmt.Sprintf("%v/%v", directory, yamlFileName)
-	fmt.Printf("yaml file path is: %v\n", yamlFilePath)
-
-	// Read the yaml file.
-	yamlFile, err := ioutil.ReadFile(yamlFilePath)
-	if err != nil {
-		return nil, err
-	}
-	fmt.Printf("yaml file contents:\n")
-	fmt.Printf("%+v\n", yamlFile)
-
-	/*
-		  // THIS DOES NOT WORK.
-			// Marshal yaml contents to config.PrototypeConfig.
-			err = yaml.Unmarshal(yamlFile, prototypeConfig)
-			if err != nil {
-				return nil, err
-			}
-
-			return prototypeConfig, nil
-*/
-/*
-	return nil, fmt.Errorf("NYI")
-}
-*/
 
 // Initial device test. Ensure we can register each type the ups mib supports
 // and get a reading from each.
@@ -254,7 +189,6 @@ func TestDevices(t *testing.T) { // nolint: gocyclo
 	fmt.Printf("\n")
 
 	// TODO: Find all power devices. Get readings.
-	// func FindDevicesByType(devices []*config.DeviceConfig, t string) (matches []*config.DeviceConfig, err error) {
 	powerDevices, err := FindDevicesByType(devices, "power")
 	if err != nil {
 		t.Fatal(err)
@@ -273,49 +207,6 @@ func TestDevices(t *testing.T) { // nolint: gocyclo
 
 	powerPrototype := FindPrototypeConfigByType(prototypeConfigs, "power")
 	fmt.Printf("powerPrototype: %+v\n", powerPrototype)
-
-	/*
-		pwd, err := os.Getwd()
-		if err != nil {
-			//return nil, err
-			t.Fatal(err)
-		}
-		fmt.Printf("pwd is: %v\n", pwd)
-
-		//fmt.Printf("ls pwd:\n")
-		prototypeDirectory := fmt.Sprintf("%v/../config/proto", pwd)
-		fmt.Printf("prototypeDirectory is: %v\n", prototypeDirectory)
-
-		// ls in the correct directory.
-		fmt.Printf("ls %v:\n", prototypeDirectory)
-		files, err := ioutil.ReadDir(prototypeDirectory)
-		if err != nil {
-			//return nil, err
-			t.Fatal(err)
-		}
-		for _, file := range files {
-			fmt.Println(file.Name())
-		}
-
-		// Set EnvProtoPath.
-		err = os.Setenv(config.EnvProtoPath, prototypeDirectory)
-		if err != nil {
-			t.Fatal(err)
-		}
-		// Unset env on exit.
-		defer func() {
-			_ = os.Unsetenv(config.EnvProtoPath)
-		}()
-
-		// Parse the Protoype configuration.
-		prototypeConfigs, err := config.ParsePrototypeConfig()
-		if err != nil {
-			t.Fatal(err)
-		}
-		for i := 0; i < len(prototypeConfigs); i++ {
-			fmt.Printf("prototypeConfigs[%d]: %+v\n", i, prototypeConfigs[i])
-		}
-	*/
 
 	/*
 			// TODO: Get readings for the power devices we've found.

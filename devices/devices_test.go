@@ -139,7 +139,24 @@ func TestDevices(t *testing.T) { // nolint: gocyclo
 
 	DumpDevices(powerDevices, "Power devices")
 
-	// TODO: Get readings for the power devices we've found.
+	/*
+		// TODO: Get readings for the power devices we've found.
+		for i := 0; i < len(powerDevices); i++ {
+			fmt.Printf("Reading power device [%d], Info: %v\n", i, powerDevices[i].Info)
+			// (variable of type *github.com/vapor-ware/synse-snmp-plugin/vendor/github.com/vapor-ware/synse-sdk/sdk/config.DeviceConfig)
+			// as *github.com/vapor-ware/synse-snmp-plugin/vendor/github.com/vapor-ware/synse-sdk/sdk.Device value in argument to SnmpPowerRead (varcheck)
+
+			// TODO: KILLER: Convert to synse-sdk.sdk.config.DeviceConfig
+			// TODO: Quick and shitty way is to do it yourself.
+			// TODO: Better way is to use the sdk, but that may have pitfalls based on experience.
+
+			readings, err := SnmpPowerRead(powerDevices[i])
+			if err != nil {
+				t.Fatal(err)
+			}
+			fmt.Printf("Readings: %+v\n", readings)
+		}
+	*/
 
 	// TODO: Find all voltage devices. Get readings.
 	// TODO: Find all current devices. Get readings.

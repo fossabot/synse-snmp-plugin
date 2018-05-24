@@ -323,7 +323,6 @@ func TestDevices(t *testing.T) { // nolint: gocyclo
 	fmt.Printf("plugin: %+v\n", plugin)
 
 	// At long last we should be able to create the Device structure.
-	//powerDevice, err := CreateDevice(powerPrototypeConfig, powerDeviceConfigs[0], powerDeviceHandler, plugin)
 	powerDevice, err := CreateDevice(powerDeviceConfigs[0], powerPrototypeConfig, powerDeviceHandler, plugin)
 	if err != nil {
 		t.Fatal(err)
@@ -338,78 +337,5 @@ func TestDevices(t *testing.T) { // nolint: gocyclo
 	for i := 0; i < len(readings); i++ {
 		fmt.Printf("Reading[%d]: %T, %+v\n", i, readings[i], readings[i])
 	}
-
-	//powerDevice, err := CreateDevice(powerPrototypeConfig, powerDeviceConfigs[0], powerDeviceHandler, nil)
-	//powerDevice, err := CreateDevice(powerDeviceConfigs[0], powerPrototypeConfig, powerDeviceHandler, nil)
-	/*
-		powerDevice, err := CreateDevice(powerDeviceConfigs[0], powerPrototypeConfig, powerDeviceHandler, testPlugin)
-		if err != nil {
-			t.Fatal(err)
-		}
-		fmt.Printf("powerDevice: %+v\n", powerDevice)
-	*/
-
-	//powerPlugin := sdk.Plugin {
-	//}
-
-	/*
-		deviceConfigs, err := ParseDeviceConfigs(".")
-		if err != nil {
-			t.Fatal(err)
-		}
-		fmt.Printf("deviceConfigs: %+v\n", deviceConfigs)
-
-		powerDevice := FindDeviceConfigByType(deviceConfigs, "power")
-		fmt.Printf("powerDevice: %+v\n", powerDevice)
-	*/
-
-	/*
-			// TODO: Get readings for the power devices we've found.
-			for i := 0; i < len(powerDevices); i++ {
-				//fmt.Printf("Reading power device [%d], Info: %v\n", i, powerDevices[i].Info)
-				//fmt.Printf("Reading power device [%d], Data[Info]: %v\n", i, powerDevices[i].Data["Info"])
-				fmt.Printf("Reading power device [%d], Data[info]: %v, Type: %v\n", i, powerDevices[i].Data["info"], powerDevices[i].Type)
-				// (variable of type *github.com/vapor-ware/synse-snmp-plugin/vendor/github.com/vapor-ware/synse-sdk/sdk/config.DeviceConfig)
-				// as *github.com/vapor-ware/synse-snmp-plugin/vendor/github.com/vapor-ware/synse-sdk/sdk.Device value in argument to SnmpPowerRead (varcheck)
-
-				// TODO: KILLER: Convert to synse-sdk.sdk.config.DeviceConfig
-				// TODO: Quick and shitty way is to do it yourself.
-				// TODO: Better way is to use the sdk, but that may have pitfalls based on experience.
-
-				// To create a device, we need:
-				// ProtoConfig
-				// DeviceConfig
-				// DeviceHandler
-				// PlugIn
-
-		    /*
-				// Create a prototye config from the appropriate device using the appropriate proto file.
-				//func loadPrototypeFile(directory string, deviceType string) (prototypeConfig *config.PrototypeConfig, err error) {
-				prototypeConfig, err := loadPrototypeFile("../config/proto/", powerDevices[i].Type)
-				if err != nil {
-					t.Fatal(err)
-				}
-				fmt.Printf("prototypeConfig: %+v\n", prototypeConfig)
-	*/
-
-	// In order to parse prototype files, we need to set an environment variable which is really really weird.
-	// Passing in a parameter is more typical.
-
-	/*
-		readings, err := SnmpPowerRead(powerDevices[i])
-		if err != nil {
-			t.Fatal(err)
-		}
-		fmt.Printf("Readings: %+v\n", readings)
-	*/
-	/*
-		}
-	*/
-	// TODO: Find all voltage devices. Get readings.
-	// TODO: Find all current devices. Get readings.
-	// TODO: Find all frequency devices. Get readings.
-	// TODO: Find all temperature devices. Get readings.
-	// TODO: Find all identity devices. Get readings.
-	// TODO: Find all status devices. Get readings.
 
 }

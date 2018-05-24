@@ -7,6 +7,8 @@ import (
 	"testing"
 
 	//"github.com/vapor-ware/synse-sdk/sdk"
+
+	"github.com/vapor-ware/synse-sdk/sdk"
 	"github.com/vapor-ware/synse-sdk/sdk/config"
 	"github.com/vapor-ware/synse-snmp-plugin/snmp/core"
 	"github.com/vapor-ware/synse-snmp-plugin/snmp/mibs/ups_mib"
@@ -106,6 +108,22 @@ func FindPrototypeConfigByType(prototypeConfigs []*config.PrototypeConfig, t str
 	return nil
 }
 
+// Create Device creates the Device structure in test land for now.
+// Make your own Devices! (DeviceConfig is dynamic with SNMP)
+// TODO:
+func CreateDevice(
+	deviceConfig *config.DeviceConfig,
+	prototypeConfig *config.PrototypeConfig,
+	deviceHandler *sdk.DeviceHandler,
+	plugin *sdk.Plugin) (device *sdk.Device, err error) {
+
+	return sdk.NewDevice(
+		prototypeConfig,
+		deviceConfig,
+		deviceHandler,
+		plugin)
+}
+
 /*
 // ParseDeviceConfigs is a wrapper around config.ParseDeviceConfig() that
 // takes a directory parameter for sanity.
@@ -162,6 +180,11 @@ func FindDeviceConfigByType(deviceConfigs []*config.DeviceConfig, t string) (dev
 	return nil
 }
 */
+
+// TODO: Explain Why? This is needed, but why?
+func testDeviceIdentifier(x map[string]string) string {
+	return ""
+}
 
 // Initial device test. Ensure we can register each type the ups mib supports
 // and get a reading from each.
@@ -247,12 +270,12 @@ func TestDevices(t *testing.T) { // nolint: gocyclo
 
 	// TODO: Find all power devices. Get readings.
 
-	powerDevices, err := FindDeviceConfigsByType(devices, "power")
+	powerDeviceConfigs, err := FindDeviceConfigsByType(devices, "power")
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	DumpDeviceConfigs(powerDevices, "Power device configs")
+	DumpDeviceConfigs(powerDeviceConfigs, "Power device configs")
 
 	// Prototype configs are in ${PWD}/../config/proto
 	// In order to parse them, we need to set environment variable EnvProtoPath to the directory which is really funky.
@@ -263,8 +286,71 @@ func TestDevices(t *testing.T) { // nolint: gocyclo
 	}
 	fmt.Printf("prototypeConfigs: %+v\n", prototypeConfigs)
 
-	powerPrototype := FindPrototypeConfigByType(prototypeConfigs, "power")
-	fmt.Printf("powerPrototype: %+v\n", powerPrototype)
+	powerPrototypeConfig := FindPrototypeConfigByType(prototypeConfigs, "power")
+	fmt.Printf("powerPrototypeConfig: %+v\n", powerPrototypeConfig)
+
+	powerDeviceHandler := &SnmpPower
+	fmt.Printf("powerDeviceHandler: %+v\n", powerDeviceHandler)
+
+	// Need handlers to create a plugin.
+	handlers, err := sdk.NewHandlers(testDeviceIdentifier, testUpsMib.EnumerateDevices)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Printf("handlers: %+v\n", handlers)
+
+	// Need a plugin config to create a plugin.
+	pluginConfig := config.PluginConfig{
+		Name:    "test config",
+		Version: "test config v1",
+		Network: config.NetworkSettings{
+			Type:    "tcp",
+			Address: "test_config",
+		},
+		Settings: config.Settings{
+			Read:        config.ReadSettings{Buffer: 1024},
+			Write:       config.WriteSettings{Buffer: 1024},
+			Transaction: config.TransactionSettings{TTL: "2s"},
+		},
+	}
+	fmt.Printf("pluginConfig: %+v\n", pluginConfig)
+
+	// Create a plugin.
+	plugin, err := sdk.NewPlugin(handlers, &pluginConfig)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Printf("plugin: %+v\n", plugin)
+
+	// At long last we should be able to create the Device structure.
+	//powerDevice, err := CreateDevice(powerPrototypeConfig, powerDeviceConfigs[0], powerDeviceHandler, plugin)
+	powerDevice, err := CreateDevice(powerDeviceConfigs[0], powerPrototypeConfig, powerDeviceHandler, plugin)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Printf("powerDevice: %+v\n", powerDevice)
+
+	readings, err := SnmpPowerRead(powerDevice)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Printf("Power Reading: %T, %+v\n", readings, readings)
+	for i := 0; i < len(readings); i++ {
+		fmt.Printf("Reading[%d]: %T, %+v\n", i, readings[i], readings[i])
+	}
+
+	//powerDevice, err := CreateDevice(powerPrototypeConfig, powerDeviceConfigs[0], powerDeviceHandler, nil)
+	//powerDevice, err := CreateDevice(powerDeviceConfigs[0], powerPrototypeConfig, powerDeviceHandler, nil)
+	/*
+		powerDevice, err := CreateDevice(powerDeviceConfigs[0], powerPrototypeConfig, powerDeviceHandler, testPlugin)
+		if err != nil {
+			t.Fatal(err)
+		}
+		fmt.Printf("powerDevice: %+v\n", powerDevice)
+	*/
+
+	//powerPlugin := sdk.Plugin {
+	//}
 
 	/*
 		deviceConfigs, err := ParseDeviceConfigs(".")

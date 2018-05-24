@@ -12,8 +12,9 @@ var SnmpPower = sdk.DeviceHandler{
 	Type:  "power",
 	Model: "snmp-power",
 
-	Read:  SnmpPowerRead,
-	Write: nil, // NYI for V1
+	Read:     SnmpPowerRead,
+	Write:    nil, // NYI for V1
+	BulkRead: nil,
 }
 
 // SnmpPowerRead is the read handler function for snmp-power devices.
@@ -44,19 +45,24 @@ func SnmpPowerRead(device *sdk.Device) (readings []*sdk.Reading, err error) {
 	if err != nil {
 		return nil, err
 	}
+	fmt.Printf("Power get. oid: %v, result: %+v\n", data["oid"], result)
 
 	// Should be an int.
 	// TODO: Multiplier (?)
 	resultInt, ok := result.Data.(int)
+	fmt.Printf("Power get. resultInt: %d\n", resultInt)
 	if !ok {
 		return nil, fmt.Errorf(
 			"Expected int power reading, got type: %T, value: %v",
 			result.Data, result.Data)
 	}
+	resultString := fmt.Sprintf("%d", resultInt)
 
 	// Create the reading.
 	readings = []*sdk.Reading{
-		sdk.NewReading("power", string(resultInt)),
+		sdk.NewReading("power", resultString),
 	}
+	fmt.Printf("Power readings: %+v\n", readings)
+	fmt.Printf("Power readings[0]: %+v\n", readings[0])
 	return readings, nil
 }

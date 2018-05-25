@@ -64,7 +64,6 @@ func (enumerator UpsOutputHeadersTableDeviceEnumerator) DeviceEnumerator(
 	// deviceData gets shimmed into the DeviceConfig for each synse device.
 	// It varies slightly for each device below.
 	deviceData := map[string]string{
-		"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
 		"info":       "upsOutputSource",
 		"base_oid":   table.Rows[0].BaseOid,
 		"table_name": table.Name,
@@ -91,7 +90,6 @@ func (enumerator UpsOutputHeadersTableDeviceEnumerator) DeviceEnumerator(
 
 	// upsOutputFrequency --------------------------------------------------------
 	deviceData = map[string]string{
-		"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
 		"info":       "upsOutputFrequency",
 		"base_oid":   table.Rows[0].BaseOid,
 		"table_name": table.Name,
@@ -118,7 +116,6 @@ func (enumerator UpsOutputHeadersTableDeviceEnumerator) DeviceEnumerator(
 
 	// upsOutputNumLines ---------------------------------------------------------
 	deviceData = map[string]string{
-		"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
 		"info":       "upsOutputNumLines",
 		"base_oid":   table.Rows[0].BaseOid,
 		"table_name": table.Name,

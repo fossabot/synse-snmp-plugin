@@ -97,7 +97,6 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 	// deviceData gets shimmed into the DeviceConfig for each synse device.
 	// It varies slightly for each device below.
 	deviceData := map[string]string{
-		"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
 		"info":       "upsBatteryStatus",
 		"base_oid":   table.Rows[0].BaseOid,
 		"table_name": table.Name,
@@ -124,7 +123,6 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 
 	// upsSecondsOnBattery --------------------------------------------------------
 	deviceData = map[string]string{
-		"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
 		"info":       "upsSecondsOnBattery",
 		"base_oid":   table.Rows[0].BaseOid,
 		"table_name": table.Name,
@@ -151,7 +149,6 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 
 	// upsEstimatedMinutesRemaining -----------------------------------------------
 	deviceData = map[string]string{
-		"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
 		"info":       "upsEstimatedMinutesRemaining",
 		"base_oid":   table.Rows[0].BaseOid,
 		"table_name": table.Name,
@@ -178,7 +175,6 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 
 	// upsEstimatedChargeRemaining ------------------------------------------------
 	deviceData = map[string]string{
-		"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
 		"info":       "upsEstimatedChargeRemaining",
 		"base_oid":   table.Rows[0].BaseOid,
 		"table_name": table.Name,
@@ -205,7 +201,6 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 
 	// upsBatteryVoltage ----------------------------------------------------------
 	deviceData = map[string]string{
-		"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
 		"info":       "upsBatteryVoltage",
 		"base_oid":   table.Rows[0].BaseOid,
 		"table_name": table.Name,
@@ -232,7 +227,6 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 
 	// upsBatteryCurrent ---------------------------------------------------------
 	deviceData = map[string]string{
-		"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
 		"info":       "upsBatteryCurrent",
 		"base_oid":   table.Rows[0].BaseOid,
 		"table_name": table.Name,
@@ -259,7 +253,6 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 
 	// upsBatteryTemperature  -----------------------------------------------------
 	deviceData = map[string]string{
-		"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
 		"info":       "upsBatteryTemperature",
 		"base_oid":   table.Rows[0].BaseOid,
 		"table_name": table.Name,

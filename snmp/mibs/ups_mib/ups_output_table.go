@@ -65,7 +65,6 @@ func (enumerator UpsOutputTableDeviceEnumerator) DeviceEnumerator(
 		// deviceData gets shimmed into the DeviceConfig for each synse device.
 		// It varies slightly for each device below.
 		deviceData := map[string]string{
-			"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
 			"info":       fmt.Sprintf("upsOutputVoltage%d", i),
 			"base_oid":   table.Rows[i].BaseOid,
 			"table_name": table.Name,
@@ -92,7 +91,6 @@ func (enumerator UpsOutputTableDeviceEnumerator) DeviceEnumerator(
 
 		// upsOutputCurrent ----------------------------------------------------------
 		deviceData = map[string]string{
-			"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
 			"info":       fmt.Sprintf("upsOutputCurrent%d", i),
 			"base_oid":   table.Rows[i].BaseOid,
 			"table_name": table.Name,
@@ -119,7 +117,6 @@ func (enumerator UpsOutputTableDeviceEnumerator) DeviceEnumerator(
 
 		// upsOutputPower -------------------------------------------------------------
 		deviceData = map[string]string{
-			"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
 			"info":       fmt.Sprintf("upsOutputPower%d", i),
 			"base_oid":   table.Rows[i].BaseOid,
 			"table_name": table.Name,
@@ -146,7 +143,6 @@ func (enumerator UpsOutputTableDeviceEnumerator) DeviceEnumerator(
 
 		// upsOutputPercentLoad -------------------------------------------------------
 		deviceData = map[string]string{
-			"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
 			"info":       fmt.Sprintf("upsOutputPercentLoad%d", i),
 			"base_oid":   table.Rows[i].BaseOid,
 			"table_name": table.Name,

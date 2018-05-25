@@ -151,7 +151,6 @@ func (enumerator UpsIdentityTableDeviceEnumerator) DeviceEnumerator(
 	// deviceData gets shimmed into the DeviceConfig for each synse device.
 	// It varies slightly for each device below.
 	deviceData := map[string]string{
-		"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
 		"info":       "upsIdentManufacturer",
 		"base_oid":   table.Rows[0].BaseOid,
 		"table_name": table.Name,
@@ -179,7 +178,6 @@ func (enumerator UpsIdentityTableDeviceEnumerator) DeviceEnumerator(
 
 	// upsIdentModel
 	deviceData = map[string]string{
-		"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
 		"info":       "upsIdentModel",
 		"base_oid":   table.Rows[0].BaseOid,
 		"table_name": table.Name,
@@ -206,7 +204,6 @@ func (enumerator UpsIdentityTableDeviceEnumerator) DeviceEnumerator(
 
 	// upsIdentUPSSoftwareVersion
 	deviceData = map[string]string{
-		"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
 		"info":       "upsIdentSoftwareVersion",
 		"base_oid":   table.Rows[0].BaseOid,
 		"table_name": table.Name,
@@ -233,7 +230,6 @@ func (enumerator UpsIdentityTableDeviceEnumerator) DeviceEnumerator(
 
 	// upsIdentAgentSoftwareVersion ----------------------------------------------
 	deviceData = map[string]string{
-		"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
 		"info":       "upsIdentAgentSoftwareVersion",
 		"base_oid":   table.Rows[0].BaseOid,
 		"table_name": table.Name,
@@ -260,7 +256,6 @@ func (enumerator UpsIdentityTableDeviceEnumerator) DeviceEnumerator(
 
 	// upsIdentName ---------------------------------------------------------------
 	deviceData = map[string]string{
-		"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
 		"info":       "upsIdentName",
 		"base_oid":   table.Rows[0].BaseOid,
 		"table_name": table.Name,
@@ -287,7 +282,6 @@ func (enumerator UpsIdentityTableDeviceEnumerator) DeviceEnumerator(
 
 	// upsIdentAttachedDevices ----------------------------------------------------
 	deviceData = map[string]string{
-		"id":         "TODO", // Needs to be passed in by the board (UPS SNMP Server)
 		"info":       "upsIdentAttacheDevices",
 		"base_oid":   table.Rows[0].BaseOid,
 		"table_name": table.Name,

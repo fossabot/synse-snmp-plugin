@@ -135,6 +135,16 @@ type UpsIdentityTableDeviceEnumerator struct {
 func (enumerator UpsIdentityTableDeviceEnumerator) DeviceEnumerator(
 	data map[string]interface{}) (devices []*config.DeviceConfig, err error) {
 
+	// Get the rack and board ids. Setup the location.
+	rack, board, err := core.GetRackAndBoard(data)
+	if err != nil {
+		return nil, err
+	}
+	location := config.Location{
+		Rack:  rack,
+		Board: board,
+	}
+
 	// Pull out the table, mib, device model, SNMP DeviceConfig.
 	table := enumerator.Table
 	mib := table.Mib.(*UpsMib)
@@ -165,14 +175,11 @@ func (enumerator UpsIdentityTableDeviceEnumerator) DeviceEnumerator(
 
 	// Create the synse device.
 	device := config.DeviceConfig{
-		Version: "1",
-		Type:    "identity",
-		Model:   model,
-		Location: config.Location{
-			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
-			Board: "TODO", // TODO: Needs to be passed in by whatever doles out the board ids.
-		},
-		Data: deviceData,
+		Version:  "1",
+		Type:     "identity",
+		Model:    model,
+		Location: location,
+		Data:     deviceData,
 	}
 	devices = append(devices, &device)
 
@@ -191,14 +198,11 @@ func (enumerator UpsIdentityTableDeviceEnumerator) DeviceEnumerator(
 	}
 
 	device2 := config.DeviceConfig{
-		Version: "1",
-		Type:    "identity",
-		Model:   model,
-		Location: config.Location{
-			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
-			Board: "TODO", // TODO: Needs to be passed in by whatever doles out the board ids.
-		},
-		Data: deviceData,
+		Version:  "1",
+		Type:     "identity",
+		Model:    model,
+		Location: location,
+		Data:     deviceData,
 	}
 	devices = append(devices, &device2)
 
@@ -217,14 +221,11 @@ func (enumerator UpsIdentityTableDeviceEnumerator) DeviceEnumerator(
 	}
 
 	device3 := config.DeviceConfig{
-		Version: "1",
-		Type:    "identity",
-		Model:   model,
-		Location: config.Location{
-			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
-			Board: "TODO", // TODO: Needs to be passed in by whatever doles out the board ids.
-		},
-		Data: deviceData,
+		Version:  "1",
+		Type:     "identity",
+		Model:    model,
+		Location: location,
+		Data:     deviceData,
 	}
 	devices = append(devices, &device3)
 
@@ -243,14 +244,11 @@ func (enumerator UpsIdentityTableDeviceEnumerator) DeviceEnumerator(
 	}
 
 	device4 := config.DeviceConfig{
-		Version: "1",
-		Type:    "identity",
-		Model:   model,
-		Location: config.Location{
-			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
-			Board: "TODO", // TODO: Needs to be passed in by whatever doles out the board ids.
-		},
-		Data: deviceData,
+		Version:  "1",
+		Type:     "identity",
+		Model:    model,
+		Location: location,
+		Data:     deviceData,
 	}
 	devices = append(devices, &device4)
 
@@ -269,14 +267,11 @@ func (enumerator UpsIdentityTableDeviceEnumerator) DeviceEnumerator(
 	}
 
 	device5 := config.DeviceConfig{
-		Version: "1",
-		Type:    "identity",
-		Model:   model,
-		Location: config.Location{
-			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
-			Board: "TODO", // TODO: Needs to be passed in by whatever doles out the board ids.
-		},
-		Data: deviceData,
+		Version:  "1",
+		Type:     "identity",
+		Model:    model,
+		Location: location,
+		Data:     deviceData,
 	}
 	devices = append(devices, &device5)
 
@@ -295,14 +290,11 @@ func (enumerator UpsIdentityTableDeviceEnumerator) DeviceEnumerator(
 	}
 
 	device6 := config.DeviceConfig{
-		Version: "1",
-		Type:    "identity",
-		Model:   model,
-		Location: config.Location{
-			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
-			Board: "TODO", // TODO: Needs to be passed in by whatever doles out the board ids.
-		},
-		Data: deviceData,
+		Version:  "1",
+		Type:     "identity",
+		Model:    model,
+		Location: location,
+		Data:     deviceData,
 	}
 	devices = append(devices, &device6)
 

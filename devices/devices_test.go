@@ -164,11 +164,53 @@ func TestDevices(t *testing.T) { // nolint: gocyclo
 	}
 	fmt.Printf("TestUpsMib created mib\n")
 
-	// Enumerate the mib.
-	snmpDevices, err := testUpsMib.EnumerateDevices(nil)
+	// Enumerate the mib. First few calls are testing bad parameters.
+	_, err = testUpsMib.EnumerateDevices(nil)
+	if err == nil {
+		if "data is nil" != err.Error() {
+			t.Fatalf("Expected err: [data is nil], got [%v]", err.Error())
+		}
+	}
+
+	//More bad parameters to test here.
+	// No rack.
+	_, err = testUpsMib.EnumerateDevices(map[string]interface{}{})
+	if err == nil {
+		if "rack is not in data" != err.Error() {
+			t.Fatalf("Expected err: [rack is not in data], got [%v]", err.Error())
+		}
+	}
+
+	// Rack is not a string.
+	_, err = testUpsMib.EnumerateDevices(map[string]interface{}{"rack": 3})
+	if err == nil {
+		if "rack is not a string, int" != err.Error() {
+			t.Fatalf("Expected err: [rack is not a string, int], got [%v]", err.Error())
+		}
+	}
+
+	// No board.
+	_, err = testUpsMib.EnumerateDevices(map[string]interface{}{"rack": "test_rack"})
+	if err == nil {
+		if "board is not in data" != err.Error() {
+			t.Fatalf("Expected err: [board is not in data], got [%v]", err.Error())
+		}
+	}
+
+	// Board is not a string.
+	_, err = testUpsMib.EnumerateDevices(map[string]interface{}{"rack": "test_rack", "board": -1})
+	if err == nil {
+		if "board is not a string, int" != err.Error() {
+			t.Fatalf("Expected err: [board is not a string, int], got [%v]", err.Error())
+		}
+	}
+
+	// This call uses valid parameters.
+	snmpDevices, err := testUpsMib.EnumerateDevices(map[string]interface{}{"rack": "test_rack", "board": "test_board"})
 	if err != nil {
 		t.Fatal(err)
 	}
+
 	//if len(snmpDevices) == 0 {
 	//	t.Fatalf("Expected devices, got none.\n")
 	//}

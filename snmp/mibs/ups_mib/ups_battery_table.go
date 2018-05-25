@@ -81,6 +81,16 @@ type UpsBatteryTableDeviceEnumerator struct {
 func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 	data map[string]interface{}) (devices []*config.DeviceConfig, err error) {
 
+	// Get the rack and board ids. Setup the location.
+	rack, board, err := core.GetRackAndBoard(data)
+	if err != nil {
+		return nil, err
+	}
+	location := config.Location{
+		Rack:  rack,
+		Board: board,
+	}
+
 	// Pull out the table, mib, device model, SNMP DeviceConfig
 	table := enumerator.Table
 	mib := table.Mib.(*UpsMib)
@@ -110,14 +120,11 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 	}
 
 	device := config.DeviceConfig{
-		Version: "1",
-		Type:    "status",
-		Model:   model,
-		Location: config.Location{
-			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
-			Board: "TODO", // TODO: Needs to be passed in by whatever doles out the board ids.
-		},
-		Data: deviceData,
+		Version:  "1",
+		Type:     "status",
+		Model:    model,
+		Location: location,
+		Data:     deviceData,
 	}
 	devices = append(devices, &device)
 
@@ -136,14 +143,11 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 	}
 
 	device2 := config.DeviceConfig{
-		Version: "1",
-		Type:    "status",
-		Model:   model,
-		Location: config.Location{
-			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
-			Board: "TODO", // TODO: Needs to be passed in by whatever doles out the board ids.
-		},
-		Data: deviceData,
+		Version:  "1",
+		Type:     "status",
+		Model:    model,
+		Location: location,
+		Data:     deviceData,
 	}
 	devices = append(devices, &device2)
 
@@ -162,14 +166,11 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 	}
 
 	device3 := config.DeviceConfig{
-		Version: "1",
-		Type:    "status",
-		Model:   model,
-		Location: config.Location{
-			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
-			Board: "TODO", // TODO: Needs to be passed in by whatever doles out the board ids.
-		},
-		Data: deviceData,
+		Version:  "1",
+		Type:     "status",
+		Model:    model,
+		Location: location,
+		Data:     deviceData,
 	}
 	devices = append(devices, &device3)
 
@@ -188,14 +189,11 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 	}
 
 	device4 := config.DeviceConfig{
-		Version: "1",
-		Type:    "status",
-		Model:   model,
-		Location: config.Location{
-			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
-			Board: "TODO", // TODO: Needs to be passed in by whatever doles out the board ids.
-		},
-		Data: deviceData,
+		Version:  "1",
+		Type:     "status",
+		Model:    model,
+		Location: location,
+		Data:     deviceData,
 	}
 	devices = append(devices, &device4)
 
@@ -214,14 +212,11 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 	}
 
 	device5 := config.DeviceConfig{
-		Version: "1",
-		Type:    "voltage",
-		Model:   model,
-		Location: config.Location{
-			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
-			Board: "TODO", // TODO: Needs to be passed in by whatever doles out the board ids.
-		},
-		Data: deviceData,
+		Version:  "1",
+		Type:     "voltage",
+		Model:    model,
+		Location: location,
+		Data:     deviceData,
 	}
 	devices = append(devices, &device5)
 
@@ -240,14 +235,11 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 	}
 
 	device6 := config.DeviceConfig{
-		Version: "1",
-		Type:    "current",
-		Model:   model,
-		Location: config.Location{
-			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
-			Board: "TODO", // TODO: Needs to be passed in by whatever doles out the board ids.
-		},
-		Data: deviceData,
+		Version:  "1",
+		Type:     "current",
+		Model:    model,
+		Location: location,
+		Data:     deviceData,
 	}
 	devices = append(devices, &device6)
 
@@ -266,14 +258,11 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 	}
 
 	device7 := config.DeviceConfig{
-		Version: "1",
-		Type:    "temperature",
-		Model:   model,
-		Location: config.Location{
-			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
-			Board: "TODO", // TODO: Needs to be passed in by whatever doles out the board ids.
-		},
-		Data: deviceData,
+		Version:  "1",
+		Type:     "temperature",
+		Model:    model,
+		Location: location,
+		Data:     deviceData,
 	}
 	devices = append(devices, &device7)
 	return devices, err

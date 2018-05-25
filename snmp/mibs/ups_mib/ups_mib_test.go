@@ -116,7 +116,7 @@ func TestUpsMib(t *testing.T) { // nolint: gocyclo
 	upsBatteryTable := testUpsMib.UpsBatteryTable
 	fmt.Printf("ZZZ (Test): Calling UpsBatteryTable device enumerator (Third try)\n")
 	fmt.Printf("This is the one that works!!!\n")
-	devices, err := upsBatteryTable.SnmpTable.DevEnumerator.DeviceEnumerator(nil)
+	devices, err := upsBatteryTable.SnmpTable.DevEnumerator.DeviceEnumerator(map[string]interface{}{"rack": "my_pet_rack", "board": "my_pet_board"})
 	fmt.Printf("ZZZ (Test): Called UpsBatteryTable device enumerator. devices %+v, err %x\n", devices, err)
 	// Ensure devices and no error.
 	if err != nil {
@@ -130,7 +130,7 @@ func TestUpsMib(t *testing.T) { // nolint: gocyclo
 
 	// Enumerate UpsInputTable devices.
 	upsInputTable := testUpsMib.UpsInputTable
-	devices, err = upsInputTable.SnmpTable.DevEnumerator.DeviceEnumerator(nil)
+	devices, err = upsInputTable.SnmpTable.DevEnumerator.DeviceEnumerator(map[string]interface{}{"rack": "my_pet_rack", "board": "my_pet_board"})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -139,7 +139,8 @@ func TestUpsMib(t *testing.T) { // nolint: gocyclo
 	}
 
 	// Enumerate the mib.
-	devices, err = testUpsMib.EnumerateDevices(nil)
+	// Testing for bad parameters is in TestDevices.
+	devices, err = testUpsMib.EnumerateDevices(map[string]interface{}{"rack": "test_rack", "board": "test_board"})
 	if err != nil {
 		t.Fatal(err)
 	}

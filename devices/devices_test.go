@@ -373,7 +373,8 @@ func TestDevices(t *testing.T) { // nolint: gocyclo
 			t.Fatalf("Unknown type: %v", typ)
 		}
 
-		device, err := CreateDevice(snmpDevices[i], &protoConfig, &deviceHandler, plugin)
+		//device, err := CreateDevice(snmpDevices[i], &protoConfig, &deviceHandler, plugin)
+		device, err := CreateDevice(snmpDevices[i], protoConfig, deviceHandler, plugin)
 		if err != nil {
 			t.Fatal(err)
 		}

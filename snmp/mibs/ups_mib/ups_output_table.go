@@ -50,7 +50,6 @@ type UpsOutputTableDeviceEnumerator struct {
 // DeviceEnumerator overrides the default SnmpTable device enumerator.
 func (enumerator UpsOutputTableDeviceEnumerator) DeviceEnumerator(
 	data map[string]interface{}) (devices []*config.DeviceConfig, err error) {
-	fmt.Printf("ZZZ: Override: UpsOutputTableDeviceEnumerator, enumerator.Table: %+v\n", enumerator.Table)
 
 	table := enumerator.Table
 	mib := table.Mib.(*UpsMib)

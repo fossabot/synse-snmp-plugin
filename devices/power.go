@@ -32,7 +32,7 @@ func SnmpPowerRead(device *sdk.Device) (readings []*sdk.Reading, err error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("snmpConfig: %+v\n", snmpConfig) // use it or lose it
+	//fmt.Printf("snmpConfig: %+v\n", snmpConfig) // use it or lose it
 
 	// Create SnmpClient.
 	snmpClient, err := core.NewSnmpClient(snmpConfig)

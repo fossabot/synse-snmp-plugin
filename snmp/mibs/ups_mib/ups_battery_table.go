@@ -90,7 +90,6 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("DDD: snmpDeviceConfigMap: %+v\n", snmpDeviceConfigMap)
 
 	// This is always a single row table.
 
@@ -285,9 +284,8 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 	}
 	devices = append(devices, &device7)
 
-	fmt.Printf("ZZZ: devices: count: %d\n", len(devices))
-	for i := 0; i < len(devices); i++ {
-		fmt.Printf("device[%d]: %+v\n", i, devices[i])
-	}
+	//for i := 0; i < len(devices); i++ {
+	//	fmt.Printf("device[%d]: %+v\n", i, devices[i])
+	//}
 	return devices, err
 }

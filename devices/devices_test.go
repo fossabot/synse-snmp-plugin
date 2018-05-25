@@ -2,7 +2,6 @@ package devices
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"testing"
 
@@ -56,23 +55,6 @@ func DumpDeviceConfigs(devices []*config.DeviceConfig, header string) {
 // ParseProtoypeConfigs is a wrapper around config.ParsePrototyeConfig() that
 // takes a directory parameter for sanity.
 func ParsePrototypeConfigs(prototypeDirectory string) (prototypeConfigs []*config.PrototypeConfig, err error) {
-	pwd, err := os.Getwd()
-	if err != nil {
-		return nil, err
-	}
-
-	fmt.Printf("pwd is: %v\n", pwd)
-	fmt.Printf("prototypeDirectory is: %v\n", prototypeDirectory)
-
-	// ls in the correct directory.
-	fmt.Printf("ls %v:\n", prototypeDirectory)
-	files, err := ioutil.ReadDir(prototypeDirectory)
-	if err != nil {
-		return nil, err
-	}
-	for _, file := range files {
-		fmt.Println(file.Name())
-	}
 
 	// Set EnvProtoPath.
 	err = os.Setenv(config.EnvProtoPath, prototypeDirectory)
@@ -476,9 +458,9 @@ func TestDevices(t *testing.T) { // nolint: gocyclo
 		if err != nil {
 			t.Fatal(err)
 		}
-		fmt.Printf("Reading Context[%d]: %T, %+v\n", i, context, context)
+		//fmt.Printf("Reading Context[%d]: %T, %+v\n", i, context, context)
 		readings := context.Reading
-		fmt.Printf("Readings[%d]: %T, %+v\n", i, readings, readings)
+		//fmt.Printf("Readings[%d]: %T, %+v\n", i, readings, readings)
 		for j := 0; j < len(readings); j++ {
 			fmt.Printf("Reading[%d][%d]: %T, %+v\n", i, j, readings[j], readings[j])
 		}

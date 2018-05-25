@@ -134,7 +134,6 @@ type UpsIdentityTableDeviceEnumerator struct {
 // DeviceEnumerator overrides the default SnmpTable device enumerator.
 func (enumerator UpsIdentityTableDeviceEnumerator) DeviceEnumerator(
 	data map[string]interface{}) (devices []*config.DeviceConfig, err error) {
-	fmt.Printf("ZZZ: Override: UpsBatteryIdentityDeviceEnumerator, enumerator.Table: %+v\n", enumerator.Table)
 
 	// Pull out the table, mib, device model, SNMP DeviceConfig.
 	table := enumerator.Table
@@ -145,7 +144,6 @@ func (enumerator UpsIdentityTableDeviceEnumerator) DeviceEnumerator(
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("DDD: snmpDeviceConfigMap: %+v\n", snmpDeviceConfigMap)
 
 	// This is always a single row table.
 

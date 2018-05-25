@@ -48,7 +48,6 @@ type UpsOutputHeadersTableDeviceEnumerator struct {
 // DeviceEnumerator overrides the default SnmpTable device enumerator.
 func (enumerator UpsOutputHeadersTableDeviceEnumerator) DeviceEnumerator(
 	data map[string]interface{}) (devices []*config.DeviceConfig, err error) {
-	fmt.Printf("ZZZ: Override: UpsBatteryOutputHeadersDeviceEnumerator, enumerator.Table: %+v\n", enumerator.Table)
 
 	table := enumerator.Table
 	mib := table.Mib.(*UpsMib)
@@ -58,7 +57,6 @@ func (enumerator UpsOutputHeadersTableDeviceEnumerator) DeviceEnumerator(
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("DDD: snmpDeviceConfigMap: %+v\n", snmpDeviceConfigMap)
 
 	// This is always a single row table.
 

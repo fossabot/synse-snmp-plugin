@@ -1,5 +1,6 @@
 # Device configuration for the Eaton® Power Xpert® Gateway Minislot PXGMS UPS Card.
 # TODO: Parameter values will likely change.
+# TODO: We need to create a device based on this config.
 version: 1.0
 locations:
   r1vec:

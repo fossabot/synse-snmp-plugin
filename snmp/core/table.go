@@ -23,7 +23,6 @@ type SnmpTable struct {
 	// Column names for the table.
 	ColumnList []string
 	// Pointer to the SnmpServer with the data for this row.
-	//SnmpServer *SnmpServer
 	SnmpServerBase *SnmpServerBase
 
 	// If present each row is keyed at:
@@ -173,7 +172,7 @@ func (snmpTable *SnmpTable) Unload() {
 // Update the table by removing the row with the same base_oid as row,
 // then adding row from the parameter list.
 // row: The row to update.
-// TODO: This looks a lot like an upsert.
+// NOTE: This is an upsert.
 func (snmpTable *SnmpTable) Update(row *SnmpRow) {
 	// Delete the existing SNMP row in the variable table by base_oid.
 	logger.Debugf("before delete row count %d", len(snmpTable.Rows))

@@ -52,11 +52,3 @@ func (snmpRow *SnmpRow) Dump() {
 		logger.Debugf("row[%v] = %v", snmpRow.Table.ColumnList[i], snmpRow.RowData[i])
 	}
 }
-
-// ToScanJSON serializes part of an SNMP row to json. This is used for/in the
-// internal scan results.
-// TODO: Change name. (ToScanMap?)
-func (snmpRow *SnmpRow) ToScanJSON() map[string]string {
-	return map[string]string{
-		"table_name": snmpRow.Table.Name, "base_oid": snmpRow.BaseOid}
-}

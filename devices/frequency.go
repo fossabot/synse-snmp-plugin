@@ -25,14 +25,12 @@ func SnmpFrequencyRead(device *sdk.Device) (readings []*sdk.Reading, err error) 
 		return nil, fmt.Errorf("device is nil")
 	}
 
-	// Get the device config. (You can't, it's private, but you can get the members.)
+	// Get the SNMP device config from the strings in data.
 	data := device.Data
-	// Create the SnmpClient from the strings in data.
 	snmpConfig, err := core.GetDeviceConfig(data)
 	if err != nil {
 		return nil, err
 	}
-	//fmt.Printf("snmpConfig: %+v\n", snmpConfig) // use it or lose it
 
 	// Create SnmpClient.
 	snmpClient, err := core.NewSnmpClient(snmpConfig)
@@ -45,12 +43,10 @@ func SnmpFrequencyRead(device *sdk.Device) (readings []*sdk.Reading, err error) 
 	if err != nil {
 		return nil, err
 	}
-	//fmt.Printf("Power get. oid: %v, result: %+v\n", data["oid"], result)
 
 	// Should be an int.
 	resultInt, ok := result.Data.(int)
 	resultFloat := float32(resultInt) / 10.0
-	//fmt.Printf("Power get. resultInt: %d\n", resultInt)
 	if !ok {
 		return nil, fmt.Errorf(
 			"Expected int frequency reading, got type: %T, value: %v",
@@ -62,7 +58,5 @@ func SnmpFrequencyRead(device *sdk.Device) (readings []*sdk.Reading, err error) 
 	readings = []*sdk.Reading{
 		sdk.NewReading("frequency", resultString),
 	}
-	//fmt.Printf("Power readings: %+v\n", readings)
-	//fmt.Printf("Power readings[0]: %+v\n", readings[0])
 	return readings, nil
 }

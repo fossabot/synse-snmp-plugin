@@ -79,7 +79,7 @@ func (enumerator UpsOutputHeadersTableDeviceEnumerator) DeviceEnumerator(
 
 	device := config.DeviceConfig{
 		Version: "1",
-		Type:    "status", // TODO: This is new for synse.
+		Type:    "status",
 		Model:   model,
 		Location: config.Location{
 			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
@@ -133,7 +133,7 @@ func (enumerator UpsOutputHeadersTableDeviceEnumerator) DeviceEnumerator(
 
 	device3 := config.DeviceConfig{
 		Version: "1",
-		Type:    "status", // TODO: This is new for synse.
+		Type:    "status",
 		Model:   model,
 		Location: config.Location{
 			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.

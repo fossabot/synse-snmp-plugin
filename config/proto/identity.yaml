@@ -1,9 +1,8 @@
 version: 1.0
 prototypes:
   - type: identity
-    # model: SNMP # TODO: Check to see that this is overridden.
-    model: PXGMS UPS + EATON 93PM # TODO: This is a hack around: prototype and instance config mismatch (model): SNMP != PXGMS UPS + EATON 93P
-    Manufacturer: SNMP # TODO: Check to see that this is overridden.
+    model: PXGMS UPS + EATON 93PM
+    Manufacturer: SNMP
     protocol: SNMP
     output:
       - type: identity

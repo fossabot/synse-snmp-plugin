@@ -112,7 +112,7 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 
 	device := config.DeviceConfig{
 		Version: "1",
-		Type:    "status", // TODO: This is new for synse.
+		Type:    "status",
 		Model:   model,
 		Location: config.Location{
 			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
@@ -139,7 +139,7 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 
 	device2 := config.DeviceConfig{
 		Version: "1",
-		Type:    "status", // TODO: This is new for synse.
+		Type:    "status",
 		Model:   model,
 		Location: config.Location{
 			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
@@ -166,7 +166,7 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 
 	device3 := config.DeviceConfig{
 		Version: "1",
-		Type:    "status", // TODO: This is new for synse.
+		Type:    "status",
 		Model:   model,
 		Location: config.Location{
 			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
@@ -193,7 +193,7 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 
 	device4 := config.DeviceConfig{
 		Version: "1",
-		Type:    "status", // TODO: This is new for synse.
+		Type:    "status",
 		Model:   model,
 		Location: config.Location{
 			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
@@ -283,9 +283,5 @@ func (enumerator UpsBatteryTableDeviceEnumerator) DeviceEnumerator(
 		Data: deviceData,
 	}
 	devices = append(devices, &device7)
-
-	//for i := 0; i < len(devices); i++ {
-	//	fmt.Printf("device[%d]: %+v\n", i, devices[i])
-	//}
 	return devices, err
 }

@@ -25,14 +25,12 @@ func SnmpTemperatureRead(device *sdk.Device) (readings []*sdk.Reading, err error
 		return nil, fmt.Errorf("device is nil")
 	}
 
-	// Get the device config. (You can't, it's private, but you can get the members.)
+	// Get the device config from the strings in data.
 	data := device.Data
-	// Create the SnmpClient from the strings in data.
 	snmpConfig, err := core.GetDeviceConfig(data)
 	if err != nil {
 		return nil, err
 	}
-	//fmt.Printf("snmpConfig: %+v\n", snmpConfig) // use it or lose it
 
 	// Create SnmpClient.
 	snmpClient, err := core.NewSnmpClient(snmpConfig)
@@ -45,12 +43,11 @@ func SnmpTemperatureRead(device *sdk.Device) (readings []*sdk.Reading, err error
 	if err != nil {
 		return nil, err
 	}
-	//fmt.Printf("Temperature get. oid: %v, result: %+v\n", data["oid"], result)
 
 	// Should be an int.
-	// TODO: Multiplier (?) (Not needed here, but may be in other places..)
 	resultInt, ok := result.Data.(int)
-	//fmt.Printf("Temperature get. resultInt: %d\n", resultInt)
+	// Currrently all temperatures are degrees C. If this changes
+	// we may consider introducing a multipier in the device config data.
 	if !ok {
 		return nil, fmt.Errorf(
 			"Expected int temperature reading, got type: %T, value: %v",
@@ -62,7 +59,5 @@ func SnmpTemperatureRead(device *sdk.Device) (readings []*sdk.Reading, err error
 	readings = []*sdk.Reading{
 		sdk.NewReading("temperature", resultString),
 	}
-	//fmt.Printf("Temperature readings: %+v\n", readings)
-	//fmt.Printf("Temperature readings[0]: %+v\n", readings[0])
 	return readings, nil
 }

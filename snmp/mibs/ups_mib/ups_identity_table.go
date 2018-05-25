@@ -167,7 +167,7 @@ func (enumerator UpsIdentityTableDeviceEnumerator) DeviceEnumerator(
 	// Create the synse device.
 	device := config.DeviceConfig{
 		Version: "1",
-		Type:    "identity", // TODO: This is new for synse.
+		Type:    "identity",
 		Model:   model,
 		Location: config.Location{
 			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
@@ -194,7 +194,7 @@ func (enumerator UpsIdentityTableDeviceEnumerator) DeviceEnumerator(
 
 	device2 := config.DeviceConfig{
 		Version: "1",
-		Type:    "identity", // TODO: This is new for synse.
+		Type:    "identity",
 		Model:   model,
 		Location: config.Location{
 			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
@@ -221,7 +221,7 @@ func (enumerator UpsIdentityTableDeviceEnumerator) DeviceEnumerator(
 
 	device3 := config.DeviceConfig{
 		Version: "1",
-		Type:    "identity", // TODO: This is new for synse.
+		Type:    "identity",
 		Model:   model,
 		Location: config.Location{
 			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
@@ -248,7 +248,7 @@ func (enumerator UpsIdentityTableDeviceEnumerator) DeviceEnumerator(
 
 	device4 := config.DeviceConfig{
 		Version: "1",
-		Type:    "identity", // TODO: This is new for synse.
+		Type:    "identity",
 		Model:   model,
 		Location: config.Location{
 			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
@@ -275,7 +275,7 @@ func (enumerator UpsIdentityTableDeviceEnumerator) DeviceEnumerator(
 
 	device5 := config.DeviceConfig{
 		Version: "1",
-		Type:    "identity", // TODO: This is new for synse.
+		Type:    "identity",
 		Model:   model,
 		Location: config.Location{
 			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.
@@ -302,7 +302,7 @@ func (enumerator UpsIdentityTableDeviceEnumerator) DeviceEnumerator(
 
 	device6 := config.DeviceConfig{
 		Version: "1",
-		Type:    "identity", // TODO: This is new for synse.
+		Type:    "identity",
 		Model:   model,
 		Location: config.Location{
 			Rack:  "TODO", // TODO: Needs to be passed in by the data parameter.

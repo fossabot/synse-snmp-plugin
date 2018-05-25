@@ -12,24 +12,28 @@ import (
 // AuthenticationProtocol enumeration for authentication algorithms.
 type AuthenticationProtocol uint8
 
-// AuthProtocol enumeration for authentication algorithms.
 const (
+	// NoAuthentication for SNMP V3.
 	NoAuthentication AuthenticationProtocol = 1
-	MD5              AuthenticationProtocol = 2
-	SHA              AuthenticationProtocol = 3
+	// MD5 Authentication for SNMP V3.
+	MD5 AuthenticationProtocol = 2
+	// SHA Authentication for SNMP V3.
+	SHA AuthenticationProtocol = 3
 )
 
 // PrivacyProtocol enumeration for encryption algorithms.
 type PrivacyProtocol uint8
 
-// PrivacyProtocol enumeration for encryption algorithms.
 const (
+	// NoPrivacy Protocol for SNMP V3.
 	NoPrivacy PrivacyProtocol = 1
-	DES       PrivacyProtocol = 2
-	AES       PrivacyProtocol = 3
+	// DES Privacy Protocol for SNMP V3.
+	DES PrivacyProtocol = 2
+	// AES Privacy Protocoli for SNMP V3.
+	AES PrivacyProtocol = 3
 )
 
-// SecurityParameters is a subset of SNMP USM parameters.
+// SecurityParameters is a subset of SNMP V3 USM parameters.
 type SecurityParameters struct {
 	AuthenticationProtocol   AuthenticationProtocol
 	PrivacyProtocol          PrivacyProtocol
@@ -46,7 +50,7 @@ func NewSecurityParameters(
 	privacyProtocol PrivacyProtocol,
 	privacyPassphrase string) (*SecurityParameters, error) {
 
-	// For now, require  authorization and privacy.
+	// For now, require authorization and privacy.
 	// Empty user/passwords are okay.
 	if !(authenticationProtocol == MD5 || authenticationProtocol == SHA) {
 		return nil, fmt.Errorf("Unsupported authentication protocol [%v]",
@@ -74,8 +78,7 @@ type DeviceConfig struct {
 	ContextName        string              // Context name for SNMP V3 messages.
 	Timeout            time.Duration       // Timeout for the SNMP query.
 	SecurityParameters *SecurityParameters // SNMP V3 security parameters.
-	//SecurityLevel      SecurityLevel       // SecurityLevel for authentication and privacy.
-	Port uint16 // UDP port to connect to.
+	Port               uint16              // UDP port to connect to.
 }
 
 // checkForEmptyString checks for an empty string variable and fails with an
@@ -92,7 +95,6 @@ func NewDeviceConfig(
 	version string,
 	endpoint string,
 	port uint16,
-	//securityLevel SecurityLevel,
 	securityParameters *SecurityParameters,
 	contextName string) (*DeviceConfig, error) {
 

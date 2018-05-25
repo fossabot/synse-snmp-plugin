@@ -25,14 +25,12 @@ func SnmpStatusRead(device *sdk.Device) (readings []*sdk.Reading, err error) {
 		return nil, fmt.Errorf("device is nil")
 	}
 
-	// Get the device config. (You can't, it's private, but you can get the members.)
+	// Get the SNMP device config from the strings in data.
 	data := device.Data
-	// Create the SnmpClient from the strings in data.
 	snmpConfig, err := core.GetDeviceConfig(data)
 	if err != nil {
 		return nil, err
 	}
-	//fmt.Printf("snmpConfig: %+v\n", snmpConfig) // use it or lose it
 
 	// Create SnmpClient.
 	snmpClient, err := core.NewSnmpClient(snmpConfig)
@@ -45,15 +43,12 @@ func SnmpStatusRead(device *sdk.Device) (readings []*sdk.Reading, err error) {
 	if err != nil {
 		return nil, err
 	}
-	//fmt.Printf("Status get. oid: %v, result: %+v\n", data["oid"], result)
 
 	// Should be a string.
-	resultString := ""
-	//fmt.Printf("status reading: %T, %v\n", result.Data, result.Data)
+	resultString := "" // Default reading for nil.
 	if result.Data != nil {
 		var ok bool
 		resultString, ok = result.Data.(string)
-		//fmt.Printf("Status get. resultInt: %d\n", resultInt)
 		if !ok {
 			// Could be an int as well.
 			var resultInt int
@@ -70,7 +65,5 @@ func SnmpStatusRead(device *sdk.Device) (readings []*sdk.Reading, err error) {
 	readings = []*sdk.Reading{
 		sdk.NewReading("status", resultString),
 	}
-	//fmt.Printf("Status readings: %+v\n", readings)
-	//fmt.Printf("Status readings[0]: %+v\n", readings[0])
 	return readings, nil
 }

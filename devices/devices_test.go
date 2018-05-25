@@ -5,8 +5,6 @@ import (
 	"os"
 	"testing"
 
-	//"github.com/vapor-ware/synse-sdk/sdk"
-
 	"github.com/vapor-ware/synse-sdk/sdk"
 	"github.com/vapor-ware/synse-sdk/sdk/config"
 	"github.com/vapor-ware/synse-snmp-plugin/snmp/core"
@@ -91,8 +89,6 @@ func FindPrototypeConfigByType(prototypeConfigs []*config.PrototypeConfig, t str
 }
 
 // Create Device creates the Device structure in test land for now.
-// Make your own Devices! (DeviceConfig is dynamic with SNMP)
-// TODO:
 func CreateDevice(
 	deviceConfig *config.DeviceConfig,
 	prototypeConfig *config.PrototypeConfig,
@@ -106,64 +102,7 @@ func CreateDevice(
 		plugin)
 }
 
-/*
-// ParseDeviceConfigs is a wrapper around config.ParseDeviceConfig() that
-// takes a directory parameter for sanity.
-func ParseDeviceConfigs(deviceDirectory string) (deviceConfigs []*config.DeviceConfig, err error) {
-	pwd, err := os.Getwd()
-	if err != nil {
-		return nil, err
-	}
-
-	fmt.Printf("pwd is: %v\n", pwd)
-	fmt.Printf("deviceDirectory is: %v\n", deviceDirectory)
-
-	// ls in the correct directory.
-	fmt.Printf("ls %v:\n", deviceDirectory)
-	files, err := ioutil.ReadDir(deviceDirectory)
-	if err != nil {
-		return nil, err
-	}
-	for _, file := range files {
-		fmt.Println(file.Name())
-	}
-
-	// Set EnvProtoPath.
-	err = os.Setenv(config.EnvDevicePath, deviceDirectory)
-	if err != nil {
-		return nil, err
-	}
-	// Unset env on exit.
-	defer func() {
-		_ = os.Unsetenv(config.EnvProtoPath)
-	}()
-
-	// Parse the Protoype configuration.
-	deviceConfigs, err = config.ParseDeviceConfig()
-	if err != nil {
-		return nil, err
-	}
-	for i := 0; i < len(deviceConfigs); i++ {
-		fmt.Printf("deviceConfigs[%d]: %+v\n", i, deviceConfigs[i])
-	}
-	return deviceConfigs, nil
-}
-
-// FindDeviceConfigByType finds a device config in the given set where Type matches t or nil if not found.
-func FindDeviceConfigByType(deviceConfigs []*config.DeviceConfig, t string) (deviceConfig *config.DeviceConfig) {
-	if deviceConfigs == nil {
-		return nil
-	}
-	for i := 0; i < len(deviceConfigs); i++ {
-		if deviceConfigs[i].Type == t {
-			return deviceConfigs[i]
-		}
-	}
-	return nil
-}
-*/
-
-// TODO: Explain Why? This is needed, but why?
+// testDeviceIdentifier is here so that we can create a plugin.
 func testDeviceIdentifier(x map[string]string) string {
 	return ""
 }
@@ -230,13 +169,14 @@ func TestDevices(t *testing.T) { // nolint: gocyclo
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(snmpDevices) == 0 {
-		t.Fatalf("Expected devices, got none.\n")
-	}
+	//if len(snmpDevices) == 0 {
+	//	t.Fatalf("Expected devices, got none.\n")
+	//}
 	if len(snmpDevices) != 40 {
 		t.Fatalf("Expected 40 snmp devices, got %d.\n", len(snmpDevices))
 	}
 
+	// TODO: Isn't this a function now?
 	fmt.Printf("Dumping snmp devices enumerated from UPS-MIB\n")
 	for i := 0; i < len(snmpDevices); i++ {
 		fmt.Printf("UPS-MIB device[%d]: %v %v %v %v %v row:%v column:%v\n", i,
@@ -250,8 +190,7 @@ func TestDevices(t *testing.T) { // nolint: gocyclo
 	}
 	fmt.Printf("\n")
 
-	// TODO: Find all power devices. Get readings.
-
+	// TODO: May be able to remove this.
 	powerDeviceConfigs, err := FindDeviceConfigsByType(snmpDevices, "power")
 	if err != nil {
 		t.Fatal(err)
@@ -259,9 +198,7 @@ func TestDevices(t *testing.T) { // nolint: gocyclo
 
 	DumpDeviceConfigs(powerDeviceConfigs, "Power device configs")
 
-	// Prototype configs are in ${PWD}/../config/proto
-	// In order to parse them, we need to set environment variable EnvProtoPath to the directory which is really funky.
-	// Why not just pass in the directory as a parameter?
+	// Parse out the prototype configs.
 	prototypeConfigs, err := ParsePrototypeConfigs("../config/proto")
 	if err != nil {
 		t.Fatal(err)
@@ -311,15 +248,14 @@ func TestDevices(t *testing.T) { // nolint: gocyclo
 	}
 	fmt.Printf("powerDevice: %+v\n", powerDevice)
 
-	//readings, err := SnmpPowerRead(powerDevice)
-	//readings, err := powerDevice.Read() // Call Read through the device's function pointer.
+	// Get the first reading.
 	context, err := powerDevice.Read() // Call Read through the device's function pointer.
 	if err != nil {
 		t.Fatal(err)
 	}
-	fmt.Printf("Power Reading Context: %T, %+v\n", context, context)
+	//fmt.Printf("Power Reading Context: %T, %+v\n", context, context)
 	readings := context.Reading
-	fmt.Printf("Power Readings: %T, %+v\n", readings, readings)
+	//fmt.Printf("Power Readings: %T, %+v\n", readings, readings)
 	for i := 0; i < len(readings); i++ {
 		fmt.Printf("Reading[%d]: %T, %+v\n", i, readings[i], readings[i])
 	}

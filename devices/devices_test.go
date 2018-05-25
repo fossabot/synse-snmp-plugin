@@ -300,86 +300,86 @@ func TestDevices(t *testing.T) { // nolint: gocyclo
 	// For each device config, create a device and perform a reading.
 
 	var devices []*sdk.Device
-	fmt.Printf("***\n")
+	//fmt.Printf("***\n")
 
 	DumpDeviceConfigs(snmpDevices, "Second device dump:")
 
 	for i := 0; i < len(snmpDevices); i++ {
 		fmt.Printf("snmpDevice[%d]: %+v\n", i, snmpDevices[i])
 
-		//var protoConfig *config.PrototypeConfig
-		//var deviceHandler *sdk.DeviceHandler
+		var protoConfig *config.PrototypeConfig
+		var deviceHandler *sdk.DeviceHandler
 		//var protoConfig config.PrototypeConfig
 		//var deviceHandler sdk.DeviceHandler
 
 		switch typ := snmpDevices[i].Type; typ {
 		case "current":
-			//protoConfig = currentPrototypeConfig
-			//deviceHandler = currentDeviceHandler
-			device, err := CreateDevice(snmpDevices[i], currentPrototypeConfig, currentDeviceHandler, plugin)
-			if err != nil {
-				t.Fatal(err)
-			}
-			devices = append(devices, device)
+			protoConfig = currentPrototypeConfig
+			deviceHandler = currentDeviceHandler
+			//device, err := CreateDevice(snmpDevices[i], currentPrototypeConfig, currentDeviceHandler, plugin)
+			//if err != nil {
+			//	t.Fatal(err)
+			//}
+			//devices = append(devices, device)
 		case "frequency":
-			//protoConfig = frequencyPrototypeConfig
-			//deviceHandler = frequencyDeviceHandler
-			device, err := CreateDevice(snmpDevices[i], frequencyPrototypeConfig, frequencyDeviceHandler, plugin)
-			if err != nil {
-				t.Fatal(err)
-			}
-			devices = append(devices, device)
+			protoConfig = frequencyPrototypeConfig
+			deviceHandler = frequencyDeviceHandler
+			//device, err := CreateDevice(snmpDevices[i], frequencyPrototypeConfig, frequencyDeviceHandler, plugin)
+			//if err != nil {
+			//	t.Fatal(err)
+			//}
+			//devices = append(devices, device)
 		case "identity":
-			//protoConfig = identityPrototypeConfig
-			//deviceHandler = identityDeviceHandler
-			device, err := CreateDevice(snmpDevices[i], identityPrototypeConfig, identityDeviceHandler, plugin)
-			if err != nil {
-				t.Fatal(err)
-			}
-			devices = append(devices, device)
+			protoConfig = identityPrototypeConfig
+			deviceHandler = identityDeviceHandler
+			//device, err := CreateDevice(snmpDevices[i], identityPrototypeConfig, identityDeviceHandler, plugin)
+			//if err != nil {
+			//	t.Fatal(err)
+			//}
+			//devices = append(devices, device)
 		case "power":
-			//protoConfig = powerPrototypeConfig
-			//deviceHandler = powerDeviceHandler
-			device, err := CreateDevice(snmpDevices[i], powerPrototypeConfig, powerDeviceHandler, plugin)
-			if err != nil {
-				t.Fatal(err)
-			}
-			devices = append(devices, device)
+			protoConfig = powerPrototypeConfig
+			deviceHandler = powerDeviceHandler
+			//device, err := CreateDevice(snmpDevices[i], powerPrototypeConfig, powerDeviceHandler, plugin)
+			//if err != nil {
+			//	t.Fatal(err)
+			//}
+			//devices = append(devices, device)
 		case "status":
-			//protoConfig = statusPrototypeConfig
-			//deviceHandler = statusDeviceHandler
-			device, err := CreateDevice(snmpDevices[i], statusPrototypeConfig, statusDeviceHandler, plugin)
-			if err != nil {
-				t.Fatal(err)
-			}
-			devices = append(devices, device)
+			protoConfig = statusPrototypeConfig
+			deviceHandler = statusDeviceHandler
+			//device, err := CreateDevice(snmpDevices[i], statusPrototypeConfig, statusDeviceHandler, plugin)
+			//if err != nil {
+			//	t.Fatal(err)
+			//}
+			//devices = append(devices, device)
 		case "temperature":
-			//protoConfig = temperaturePrototypeConfig
-			//deviceHandler = temperatureDeviceHandler
-			device, err := CreateDevice(snmpDevices[i], temperaturePrototypeConfig, temperatureDeviceHandler, plugin)
-			if err != nil {
-				t.Fatal(err)
-			}
-			devices = append(devices, device)
+			protoConfig = temperaturePrototypeConfig
+			deviceHandler = temperatureDeviceHandler
+			//device, err := CreateDevice(snmpDevices[i], temperaturePrototypeConfig, temperatureDeviceHandler, plugin)
+			//if err != nil {
+			//	t.Fatal(err)
+			//}
+			//devices = append(devices, device)
 		case "voltage":
-			//protoConfig = voltagePrototypeConfig
-			//deviceHandler = voltageDeviceHandler
-			device, err := CreateDevice(snmpDevices[i], voltagePrototypeConfig, voltageDeviceHandler, plugin)
-			if err != nil {
-				t.Fatal(err)
-			}
-			devices = append(devices, device)
+			protoConfig = voltagePrototypeConfig
+			deviceHandler = voltageDeviceHandler
+			//device, err := CreateDevice(snmpDevices[i], voltagePrototypeConfig, voltageDeviceHandler, plugin)
+			//if err != nil {
+			//	t.Fatal(err)
+			//}
+			//devices = append(devices, device)
 		default:
 			t.Fatalf("Unknown type: %v", typ)
 		}
 
-		//device, err := CreateDevice(snmpDevices[i], &protoConfig, &deviceHandler, plugin)
-		//if err != nil {
-		//	t.Fatal(err)
-		//}
-		//devices = append(devices, device)
+		device, err := CreateDevice(snmpDevices[i], &protoConfig, &deviceHandler, plugin)
+		if err != nil {
+			t.Fatal(err)
+		}
+		devices = append(devices, device)
 	}
-	fmt.Printf("***\n")
+	//fmt.Printf("***\n")
 	//fmt.Printf("devices: %+v\n", devices)
 	fmt.Printf("Dumping all devices\n")
 	for i := 0; i < len(devices); i++ {

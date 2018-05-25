@@ -244,33 +244,33 @@ func TestDevices(t *testing.T) { // nolint: gocyclo
 	fmt.Printf("TestUpsMib created mib\n")
 
 	// Enumerate the mib.
-	devices, err := testUpsMib.EnumerateDevices(nil)
+	snmpDevices, err := testUpsMib.EnumerateDevices(nil)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(devices) == 0 {
+	if len(snmpDevices) == 0 {
 		t.Fatalf("Expected devices, got none.\n")
 	}
-	if len(devices) != 40 {
-		t.Fatalf("Expected 40 devices, got %d.\n", len(devices))
+	if len(snmpDevices) != 40 {
+		t.Fatalf("Expected 40 snmp devices, got %d.\n", len(snmpDevices))
 	}
 
-	fmt.Printf("Dumping devices enumerated from UPS-MIB\n")
-	for i := 0; i < len(devices); i++ {
+	fmt.Printf("Dumping snmp devices enumerated from UPS-MIB\n")
+	for i := 0; i < len(snmpDevices); i++ {
 		fmt.Printf("UPS-MIB device[%d]: %v %v %v %v %v row:%v column:%v\n", i,
-			devices[i].Data["table_name"],
-			devices[i].Type,
-			devices[i].Data["info"],
-			devices[i].Data["oid"],
-			devices[i].Data["base_oid"],
-			devices[i].Data["row"],
-			devices[i].Data["column"])
+			snmpDevices[i].Data["table_name"],
+			snmpDevices[i].Type,
+			snmpDevices[i].Data["info"],
+			snmpDevices[i].Data["oid"],
+			snmpDevices[i].Data["base_oid"],
+			snmpDevices[i].Data["row"],
+			snmpDevices[i].Data["column"])
 	}
 	fmt.Printf("\n")
 
 	// TODO: Find all power devices. Get readings.
 
-	powerDeviceConfigs, err := FindDeviceConfigsByType(devices, "power")
+	powerDeviceConfigs, err := FindDeviceConfigsByType(snmpDevices, "power")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -329,13 +329,159 @@ func TestDevices(t *testing.T) { // nolint: gocyclo
 	}
 	fmt.Printf("powerDevice: %+v\n", powerDevice)
 
-	readings, err := SnmpPowerRead(powerDevice)
+	//readings, err := SnmpPowerRead(powerDevice)
+	//readings, err := powerDevice.Read() // Call Read through the device's function pointer.
+	context, err := powerDevice.Read() // Call Read through the device's function pointer.
 	if err != nil {
 		t.Fatal(err)
 	}
-	fmt.Printf("Power Reading: %T, %+v\n", readings, readings)
+	fmt.Printf("Power Reading Context: %T, %+v\n", context, context)
+	readings := context.Reading
+	fmt.Printf("Power Readings: %T, %+v\n", readings, readings)
 	for i := 0; i < len(readings); i++ {
 		fmt.Printf("Reading[%d]: %T, %+v\n", i, readings[i], readings[i])
 	}
 
+	// Get the rest of the prototype configs and DeviceHandlers.
+	currentPrototypeConfig := FindPrototypeConfigByType(prototypeConfigs, "current")
+	fmt.Printf("currentPrototypeConfig: %+v\n", currentPrototypeConfig)
+
+	currentDeviceHandler := &SnmpCurrent
+	fmt.Printf("currentDeviceHandler: %+v\n", currentDeviceHandler)
+
+	frequencyPrototypeConfig := FindPrototypeConfigByType(prototypeConfigs, "frequency")
+	fmt.Printf("frequencyPrototypeConfig: %+v\n", frequencyPrototypeConfig)
+
+	frequencyDeviceHandler := &SnmpFrequency
+	fmt.Printf("frequencyDeviceHandler: %+v\n", frequencyDeviceHandler)
+
+	identityPrototypeConfig := FindPrototypeConfigByType(prototypeConfigs, "identity")
+	fmt.Printf("identityPrototypeConfig: %+v\n", identityPrototypeConfig)
+
+	identityDeviceHandler := &SnmpIdentity
+	fmt.Printf("identityDeviceHandler: %+v\n", identityDeviceHandler)
+
+	statusPrototypeConfig := FindPrototypeConfigByType(prototypeConfigs, "status")
+	fmt.Printf("statusPrototypeConfig: %+v\n", statusPrototypeConfig)
+
+	statusDeviceHandler := &SnmpStatus
+	fmt.Printf("statusDeviceHandler: %+v\n", statusDeviceHandler)
+
+	temperaturePrototypeConfig := FindPrototypeConfigByType(prototypeConfigs, "temperature")
+	fmt.Printf("temperaturePrototypeConfig: %+v\n", temperaturePrototypeConfig)
+
+	temperatureDeviceHandler := &SnmpTemperature
+	fmt.Printf("temperatureDeviceHandler: %+v\n", temperatureDeviceHandler)
+
+	voltagePrototypeConfig := FindPrototypeConfigByType(prototypeConfigs, "voltage")
+	fmt.Printf("voltagePrototypeConfig: %+v\n", voltagePrototypeConfig)
+
+	voltageDeviceHandler := &SnmpVoltage
+	fmt.Printf("voltageDeviceHandler: %+v\n", voltageDeviceHandler)
+
+	// For each device config, create a device and perform a reading.
+
+	var devices []*sdk.Device
+	fmt.Printf("***\n")
+
+	DumpDeviceConfigs(snmpDevices, "Second device dump:")
+
+	for i := 0; i < len(snmpDevices); i++ {
+		fmt.Printf("snmpDevice[%d]: %+v\n", i, snmpDevices[i])
+
+		//var protoConfig *config.PrototypeConfig
+		//var deviceHandler *sdk.DeviceHandler
+		//var protoConfig config.PrototypeConfig
+		//var deviceHandler sdk.DeviceHandler
+
+		switch typ := snmpDevices[i].Type; typ {
+		case "current":
+			//protoConfig = currentPrototypeConfig
+			//deviceHandler = currentDeviceHandler
+			device, err := CreateDevice(snmpDevices[i], currentPrototypeConfig, currentDeviceHandler, plugin)
+			if err != nil {
+				t.Fatal(err)
+			}
+			devices = append(devices, device)
+		case "frequency":
+			//protoConfig = frequencyPrototypeConfig
+			//deviceHandler = frequencyDeviceHandler
+			device, err := CreateDevice(snmpDevices[i], frequencyPrototypeConfig, frequencyDeviceHandler, plugin)
+			if err != nil {
+				t.Fatal(err)
+			}
+			devices = append(devices, device)
+		case "identity":
+			//protoConfig = identityPrototypeConfig
+			//deviceHandler = identityDeviceHandler
+			device, err := CreateDevice(snmpDevices[i], identityPrototypeConfig, identityDeviceHandler, plugin)
+			if err != nil {
+				t.Fatal(err)
+			}
+			devices = append(devices, device)
+		case "power":
+			//protoConfig = powerPrototypeConfig
+			//deviceHandler = powerDeviceHandler
+			device, err := CreateDevice(snmpDevices[i], powerPrototypeConfig, powerDeviceHandler, plugin)
+			if err != nil {
+				t.Fatal(err)
+			}
+			devices = append(devices, device)
+		case "status":
+			//protoConfig = statusPrototypeConfig
+			//deviceHandler = statusDeviceHandler
+			device, err := CreateDevice(snmpDevices[i], statusPrototypeConfig, statusDeviceHandler, plugin)
+			if err != nil {
+				t.Fatal(err)
+			}
+			devices = append(devices, device)
+		case "temperature":
+			//protoConfig = temperaturePrototypeConfig
+			//deviceHandler = temperatureDeviceHandler
+			device, err := CreateDevice(snmpDevices[i], temperaturePrototypeConfig, temperatureDeviceHandler, plugin)
+			if err != nil {
+				t.Fatal(err)
+			}
+			devices = append(devices, device)
+		case "voltage":
+			//protoConfig = voltagePrototypeConfig
+			//deviceHandler = voltageDeviceHandler
+			device, err := CreateDevice(snmpDevices[i], voltagePrototypeConfig, voltageDeviceHandler, plugin)
+			if err != nil {
+				t.Fatal(err)
+			}
+			devices = append(devices, device)
+		default:
+			t.Fatalf("Unknown type: %v", typ)
+		}
+
+		//device, err := CreateDevice(snmpDevices[i], &protoConfig, &deviceHandler, plugin)
+		//if err != nil {
+		//	t.Fatal(err)
+		//}
+		//devices = append(devices, device)
+	}
+	fmt.Printf("***\n")
+	//fmt.Printf("devices: %+v\n", devices)
+	fmt.Printf("Dumping all devices\n")
+	for i := 0; i < len(devices); i++ {
+		fmt.Printf("device[%d]: %+v\n", i, devices[i])
+	}
+
+	// Read each device
+	fmt.Printf("Reading each device.\n")
+	for i := 0; i < len(devices); i++ {
+		//context, err := powerDevice.Read() // Call Read through the device's function pointer.
+		context, err := devices[i].Read() // Call Read through the device's function pointer.
+		if err != nil {
+			t.Fatal(err)
+		}
+		fmt.Printf("Reading Context[%d]: %T, %+v\n", i, context, context)
+		readings := context.Reading
+		fmt.Printf("Readings[%d]: %T, %+v\n", i, readings, readings)
+		for j := 0; j < len(readings); j++ {
+			fmt.Printf("Reading[%d][%d]: %T, %+v\n", i, j, readings[j], readings[j])
+		}
+	}
+	fmt.Printf("Read each device.\n")
 }

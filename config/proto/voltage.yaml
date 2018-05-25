@@ -1,7 +1,8 @@
 version: 1.0
 prototypes:
   - type: voltage
-    model: SNMP # TODO: Check to see that this is overridden.
+    # model: SNMP # TODO: Check to see that this is overridden.
+    model: PXGMS UPS + EATON 93PM # TODO: This is a hack around: prototype and instance config mismatch (model): SNMP != PXGMS UPS + EATON 93PM
     manufacturer: SNMP # TODO: Check to see that this is overridden.
     protocol: SNMP
     output:

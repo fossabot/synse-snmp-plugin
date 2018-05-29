@@ -50,8 +50,7 @@ func TestUpsMib(t *testing.T) { // nolint: gocyclo
 	// Create SnmpServerBase
 	snmpServer, err := core.NewSnmpServerBase(
 		client,
-		config,
-		"test_rack")
+		config)
 	if err != nil {
 		t.Fatal(err) // Fail the test.
 	}

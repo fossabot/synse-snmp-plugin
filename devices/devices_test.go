@@ -155,12 +155,10 @@ func TestDevices(t *testing.T) { // nolint: gocyclo
 	// Create SnmpServerBase
 	snmpServer, err := core.NewSnmpServerBase(
 		client,
-		snmpConfig,
-		"test_rack")
+		snmpConfig)
 	if err != nil {
 		t.Fatal(err) // Fail the test.
 	}
-	t.Logf("snmpServer: %+v", snmpServer)
 
 	// Create the UpsMib and dump it.
 	testUpsMib, err := mibs.NewUpsMib(snmpServer)

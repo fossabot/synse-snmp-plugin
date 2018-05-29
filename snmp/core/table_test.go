@@ -50,8 +50,7 @@ func TestTable(t *testing.T) {
 	// Create SnmpServerBase
 	snmpServer, err := NewSnmpServerBase(
 		client,
-		config,
-		"test_rack")
+		config)
 	if err != nil {
 		t.Error(err) // Fail the test.
 	}

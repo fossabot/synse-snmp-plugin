@@ -1,14 +1,12 @@
 package core
 
 import (
-	"fmt"
 	"testing"
 )
 
 // TestTable
 // Initial test creates a table based on the UPS-MIB, upsInput table.
 func TestTable(t *testing.T) {
-	t.Logf("TestTable start")
 
 	// In order to create the table, we need to create an SNMP Server.
 	// In order to create the SNMP server, we need to have an SnmpClient.
@@ -24,8 +22,6 @@ func TestTable(t *testing.T) {
 		t.Fatal(err) // Fail the test.
 	}
 
-	t.Logf("securityParameters: %+v", securityParameters)
-
 	// Create a config.
 	config, err := NewDeviceConfig(
 		"v3",        // SNMP v3
@@ -37,15 +33,11 @@ func TestTable(t *testing.T) {
 		t.Fatal(err) // Fail the test.
 	}
 
-	t.Logf("config: %+v", config)
-
 	// Create a client.
 	client, err := NewSnmpClient(config)
 	if err != nil {
 		t.Fatal(err) // Fail the test.
 	}
-
-	t.Logf("client: %+v", client)
 
 	// Create SnmpServerBase
 	snmpServer, err := NewSnmpServerBase(
@@ -54,8 +46,6 @@ func TestTable(t *testing.T) {
 	if err != nil {
 		t.Error(err) // Fail the test.
 	}
-
-	t.Logf("snmpServer: %+v", snmpServer)
 
 	// Create SnmpTable similar to the table for the UPS input power.
 	// The table here has an empty DeviceEnumerator.
@@ -82,7 +72,6 @@ func TestTable(t *testing.T) {
 
 	// Call DeviceEnumerator for testUpsInputTable.
 	// It is currently the default which does nothing, unlike the real table defined under ups_mib.
-	fmt.Printf("testUpsInputTable: %v\n", testUpsInputTable)
 	devices, err := testUpsInputTable.DevEnumerator.DeviceEnumerator(nil)
 	if devices == nil {
 		t.Fatal("devices is nil")
@@ -93,6 +82,4 @@ func TestTable(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-
-	t.Logf("TestTable end")
 }

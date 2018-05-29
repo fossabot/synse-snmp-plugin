@@ -23,8 +23,6 @@ func TestClient(t *testing.T) {
 		t.Fatal(err) // Fail the test.
 	}
 
-	t.Logf("securityParameters: %+v", securityParameters)
-
 	// Create a config.
 	config, err := NewDeviceConfig(
 		"v3",        // SNMP v3
@@ -36,16 +34,11 @@ func TestClient(t *testing.T) {
 		t.Fatal(err) // Fail the test.
 	}
 
-	t.Logf("SSS: valid config: %+v", config)
-	t.Logf("SSS: valid config security parameters: %+v", config.SecurityParameters)
-
 	// Create a client.
 	client, err := NewSnmpClient(config)
 	if err != nil {
 		t.Fatal(err) // Fail the test.
 	}
-
-	t.Logf("client: %+v", client)
 
 	// Walk OID "1.3.6.1" and print results.
 	results, err := client.Walk("1.3.6.1")
@@ -174,7 +167,6 @@ func TestValidConfigMapShaAes(t *testing.T) {
 	if err != nil {
 		t.Fatal(err) // Fail test.
 	}
-	t.Logf("deviceConfig: %+v", actual)
 
 	// Test each field against expected.
 	expected := getExpectedConfigShaAes()
@@ -201,7 +193,6 @@ func TestValidConfigMapMd5Des(t *testing.T) {
 	if err != nil {
 		t.Fatal(err) // Fail test.
 	}
-	t.Logf("deviceConfig: %+v", actual)
 
 	// Test each field against expected.
 	expected := getExpectedConfigMd5Des()
@@ -228,7 +219,6 @@ func TestConfigMapInvalidVersion(t *testing.T) {
 	_, err := GetDeviceConfig(yamlConfig)
 	if err != nil {
 		// We expect an error here: Version [v2c] unsupported
-		t.Logf("got error: %v", err)
 		expectedError := "Version [v2c] unsupported"
 		if err.Error() != expectedError {
 			t.Fatalf("Expected error %v, got %v", expectedError, err.Error())
@@ -253,7 +243,6 @@ func TestConfigMapForgotVersion(t *testing.T) {
 	_, err := GetDeviceConfig(yamlConfig)
 	if err != nil {
 		// We expect an error here: Version [] unsupported
-		t.Logf("got error: %v", err)
 		expectedError := "Version [] unsupported"
 		if err.Error() != expectedError {
 			t.Fatalf("Expected error %v, got %v", expectedError, err.Error())
@@ -277,7 +266,6 @@ func TestConfigMapForgotEndpoint(t *testing.T) {
 	}
 	_, err := GetDeviceConfig(yamlConfig)
 	if err != nil {
-		t.Logf("got error: %v", err)
 		// We expect an error here:
 		expectedError := "endpoint is an empty string, but should not be"
 		if err.Error() != expectedError {
@@ -302,7 +290,6 @@ func TestConfigMapNonNumericPort(t *testing.T) {
 	}
 	_, err := GetDeviceConfig(yamlConfig)
 	if err != nil {
-		t.Logf("got error: %v", err)
 		// We expect an error here:
 		expectedError := "strconv.Atoi: parsing \"Z\": invalid syntax"
 		if err.Error() != expectedError {
@@ -327,7 +314,6 @@ func TestConfigMapForgotPort(t *testing.T) {
 	}
 	_, err := GetDeviceConfig(yamlConfig)
 	if err != nil {
-		t.Logf("got error: %v", err)
 		// We expect an error here:
 		expectedError := "strconv.Atoi: parsing \"\": invalid syntax"
 		if err.Error() != expectedError {
@@ -353,7 +339,6 @@ func TestConfigMapForgotContextName(t *testing.T) {
 	}
 	_, err := GetDeviceConfig(yamlConfig)
 	if err != nil {
-		t.Logf("got error: %v", err)
 		// We should not expect an error here:
 		t.Fatalf("Expected no error, got %v", err.Error())
 	}
@@ -379,7 +364,6 @@ func TestValidConfigMapShaAesExtraField(t *testing.T) {
 	if err != nil {
 		t.Fatal(err) // Fail test.
 	}
-	t.Logf("deviceConfig: %+v", actual)
 
 	// Test each field against expected.
 	expected := getExpectedConfigShaAes()
@@ -402,8 +386,6 @@ func TestDeviceConfigSerialization(t *testing.T) {
 		t.Fatal(err) // Fail the test.
 	}
 
-	t.Logf("securityParameters: %+v", securityParameters)
-
 	// Create a config.
 	config, err := NewDeviceConfig(
 		"v3",        // SNMP v3
@@ -415,22 +397,17 @@ func TestDeviceConfigSerialization(t *testing.T) {
 		t.Fatal(err) // Fail the test.
 	}
 
-	t.Logf("FFF: valid config: %+v", config)
-	t.Logf("FFF: valid config security parameters: %+v", config.SecurityParameters)
-
 	// Serialize
 	serialized, err := config.ToMap()
 	if err != nil {
 		t.Fatal(err) // Fail the test.
 	}
-	t.Logf("serialized: %+v", serialized)
 
 	// Deserialize
 	deserialized, err := GetDeviceConfig(serialized)
 	if err != nil {
 		t.Fatal(err) // Fail the test.
 	}
-	t.Logf("deserialized: %+v", deserialized)
 
 	// Compare. config is the expected (original), deserialized is actual.
 	err = verifyConfig(config, deserialized)

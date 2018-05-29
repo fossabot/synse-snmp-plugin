@@ -11,9 +11,11 @@ import (
 	"github.com/vapor-ware/synse-snmp-plugin/snmp/mibs/ups_mib"
 )
 
-// FindDevicesConfigsByType returns all elements in a DeviceConfig array where the Type is t.
-// TODO: Could some of these be SDK helper functions? No idea if the answer is yes or no.
-func FindDeviceConfigsByType(devices []*config.DeviceConfig, t string) (matches []*config.DeviceConfig, err error) {
+// FindDevicesConfigsByType returns all elements in a DeviceConfig array where
+// the Type is t.
+// TODO: Could some of these be SDK helper functions? Maybe?
+func FindDeviceConfigsByType(devices []*config.DeviceConfig, t string) (
+	matches []*config.DeviceConfig, err error) {
 	if devices == nil {
 		return nil, fmt.Errorf("devices is nil")
 	}
@@ -52,7 +54,8 @@ func DumpDeviceConfigs(devices []*config.DeviceConfig, header string) {
 
 // ParseProtoypeConfigs is a wrapper around config.ParsePrototyeConfig() that
 // takes a directory parameter for sanity.
-func ParsePrototypeConfigs(prototypeDirectory string) (prototypeConfigs []*config.PrototypeConfig, err error) {
+func ParsePrototypeConfigs(prototypeDirectory string) (
+	prototypeConfigs []*config.PrototypeConfig, err error) {
 
 	// Set EnvProtoPath.
 	err = os.Setenv(config.EnvProtoPath, prototypeDirectory)
@@ -75,8 +78,11 @@ func ParsePrototypeConfigs(prototypeDirectory string) (prototypeConfigs []*confi
 	return prototypeConfigs, nil
 }
 
-// FindPrototypeConfigByType finds a prototype config in the given set where Type matches t or nil if not found.
-func FindPrototypeConfigByType(prototypeConfigs []*config.PrototypeConfig, t string) (prototypeConfig *config.PrototypeConfig) {
+// FindPrototypeConfigByType finds a prototype config in the given set where
+// Type matches t or nil if not found.
+func FindPrototypeConfigByType(
+	prototypeConfigs []*config.PrototypeConfig, t string) (
+	prototypeConfig *config.PrototypeConfig) {
 	if prototypeConfigs == nil {
 		return nil
 	}
@@ -157,12 +163,10 @@ func TestDevices(t *testing.T) { // nolint: gocyclo
 	t.Logf("snmpServer: %+v", snmpServer)
 
 	// Create the UpsMib and dump it.
-	fmt.Printf("TestUpsMib creating mib\n")
 	testUpsMib, err := mibs.NewUpsMib(snmpServer)
 	if err != nil {
 		t.Fatal(err) // Fail the test.
 	}
-	fmt.Printf("TestUpsMib created mib\n")
 
 	// Enumerate the mib. First few calls are testing bad parameters.
 	_, err = testUpsMib.EnumerateDevices(nil)
@@ -172,7 +176,6 @@ func TestDevices(t *testing.T) { // nolint: gocyclo
 		}
 	}
 
-	//More bad parameters to test here.
 	// No rack.
 	_, err = testUpsMib.EnumerateDevices(map[string]interface{}{})
 	if err == nil {
@@ -185,12 +188,14 @@ func TestDevices(t *testing.T) { // nolint: gocyclo
 	_, err = testUpsMib.EnumerateDevices(map[string]interface{}{"rack": 3})
 	if err == nil {
 		if "rack is not a string, int" != err.Error() {
-			t.Fatalf("Expected err: [rack is not a string, int], got [%v]", err.Error())
+			t.Fatalf(
+				"Expected err: [rack is not a string, int], got [%v]", err.Error())
 		}
 	}
 
 	// No board.
-	_, err = testUpsMib.EnumerateDevices(map[string]interface{}{"rack": "test_rack"})
+	_, err = testUpsMib.EnumerateDevices(
+		map[string]interface{}{"rack": "test_rack"})
 	if err == nil {
 		if "board is not in data" != err.Error() {
 			t.Fatalf("Expected err: [board is not in data], got [%v]", err.Error())
@@ -198,63 +203,58 @@ func TestDevices(t *testing.T) { // nolint: gocyclo
 	}
 
 	// Board is not a string.
-	_, err = testUpsMib.EnumerateDevices(map[string]interface{}{"rack": "test_rack", "board": -1})
+	_, err = testUpsMib.EnumerateDevices(
+		map[string]interface{}{"rack": "test_rack", "board": -1})
 	if err == nil {
 		if "board is not a string, int" != err.Error() {
-			t.Fatalf("Expected err: [board is not a string, int], got [%v]", err.Error())
+			t.Fatalf(
+				"Expected err: [board is not a string, int], got [%v]", err.Error())
 		}
 	}
 
 	// This call uses valid parameters.
-	snmpDevices, err := testUpsMib.EnumerateDevices(map[string]interface{}{"rack": "test_rack", "board": "test_board"})
+	snmpDevices, err := testUpsMib.EnumerateDevices(
+		map[string]interface{}{"rack": "test_rack", "board": "test_board"})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	//if len(snmpDevices) == 0 {
-	//	t.Fatalf("Expected devices, got none.\n")
-	//}
+	//func DumpDeviceConfigs(devices []*config.DeviceConfig, header string) {
+	DumpDeviceConfigs(snmpDevices, "Devices from UPS-MIB")
 	if len(snmpDevices) != 40 {
-		t.Fatalf("Expected 40 snmp devices, got %d.\n", len(snmpDevices))
+		t.Fatalf("Expected 40 snmp devices, got %d.", len(snmpDevices))
 	}
 
-	// TODO: Isn't this a function now?
-	fmt.Printf("Dumping snmp devices enumerated from UPS-MIB\n")
-	for i := 0; i < len(snmpDevices); i++ {
-		fmt.Printf("UPS-MIB device[%d]: %v %v %v %v %v row:%v column:%v\n", i,
-			snmpDevices[i].Data["table_name"],
-			snmpDevices[i].Type,
-			snmpDevices[i].Data["info"],
-			snmpDevices[i].Data["oid"],
-			snmpDevices[i].Data["base_oid"],
-			snmpDevices[i].Data["row"],
-			snmpDevices[i].Data["column"])
-	}
-	fmt.Printf("\n")
-
-	// TODO: May be able to remove this.
+	// Find power device configs in the UPS MIB. There should be six.
 	powerDeviceConfigs, err := FindDeviceConfigsByType(snmpDevices, "power")
 	if err != nil {
 		t.Fatal(err)
 	}
-
 	DumpDeviceConfigs(powerDeviceConfigs, "Power device configs")
+	if len(powerDeviceConfigs) != 6 {
+		t.Fatalf("Expected 6 power device configs, got %d", len(powerDeviceConfigs))
+	}
 
-	// Parse out the prototype configs.
+	// Parse out all of the prototype configs. Expect 7.
 	prototypeConfigs, err := ParsePrototypeConfigs("../config/proto")
 	if err != nil {
 		t.Fatal(err)
 	}
-	fmt.Printf("prototypeConfigs: %+v\n", prototypeConfigs)
+	if len(prototypeConfigs) != 7 {
+		t.Fatalf("Expected 7 prototype configs, got %d", len(prototypeConfigs))
+	}
 
+	// Find the power prototype config.
 	powerPrototypeConfig := FindPrototypeConfigByType(prototypeConfigs, "power")
 	fmt.Printf("powerPrototypeConfig: %+v\n", powerPrototypeConfig)
 
+	// Setup the power device handler.
 	powerDeviceHandler := &SnmpPower
 	fmt.Printf("powerDeviceHandler: %+v\n", powerDeviceHandler)
 
 	// Need handlers to create a plugin.
-	handlers, err := sdk.NewHandlers(testDeviceIdentifier, testUpsMib.EnumerateDevices)
+	handlers, err := sdk.NewHandlers(
+		testDeviceIdentifier, testUpsMib.EnumerateDevices)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -284,7 +284,8 @@ func TestDevices(t *testing.T) { // nolint: gocyclo
 	fmt.Printf("plugin: %+v\n", plugin)
 
 	// At long last we should be able to create the Device structure.
-	powerDevice, err := CreateDevice(powerDeviceConfigs[0], powerPrototypeConfig, powerDeviceHandler, plugin)
+	powerDevice, err := CreateDevice(
+		powerDeviceConfigs[0], powerPrototypeConfig, powerDeviceHandler, plugin)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -295,27 +296,28 @@ func TestDevices(t *testing.T) { // nolint: gocyclo
 	if err != nil {
 		t.Fatal(err)
 	}
-	//fmt.Printf("Power Reading Context: %T, %+v\n", context, context)
 	readings := context.Reading
-	//fmt.Printf("Power Readings: %T, %+v\n", readings, readings)
 	for i := 0; i < len(readings); i++ {
 		fmt.Printf("Reading[%d]: %T, %+v\n", i, readings[i], readings[i])
 	}
 
 	// Get the rest of the prototype configs and DeviceHandlers.
-	currentPrototypeConfig := FindPrototypeConfigByType(prototypeConfigs, "current")
+	currentPrototypeConfig := FindPrototypeConfigByType(
+		prototypeConfigs, "current")
 	fmt.Printf("currentPrototypeConfig: %+v\n", currentPrototypeConfig)
 
 	currentDeviceHandler := &SnmpCurrent
 	fmt.Printf("currentDeviceHandler: %+v\n", currentDeviceHandler)
 
-	frequencyPrototypeConfig := FindPrototypeConfigByType(prototypeConfigs, "frequency")
+	frequencyPrototypeConfig := FindPrototypeConfigByType(
+		prototypeConfigs, "frequency")
 	fmt.Printf("frequencyPrototypeConfig: %+v\n", frequencyPrototypeConfig)
 
 	frequencyDeviceHandler := &SnmpFrequency
 	fmt.Printf("frequencyDeviceHandler: %+v\n", frequencyDeviceHandler)
 
-	identityPrototypeConfig := FindPrototypeConfigByType(prototypeConfigs, "identity")
+	identityPrototypeConfig := FindPrototypeConfigByType(
+		prototypeConfigs, "identity")
 	fmt.Printf("identityPrototypeConfig: %+v\n", identityPrototypeConfig)
 
 	identityDeviceHandler := &SnmpIdentity
@@ -327,13 +329,15 @@ func TestDevices(t *testing.T) { // nolint: gocyclo
 	statusDeviceHandler := &SnmpStatus
 	fmt.Printf("statusDeviceHandler: %+v\n", statusDeviceHandler)
 
-	temperaturePrototypeConfig := FindPrototypeConfigByType(prototypeConfigs, "temperature")
+	temperaturePrototypeConfig := FindPrototypeConfigByType(
+		prototypeConfigs, "temperature")
 	fmt.Printf("temperaturePrototypeConfig: %+v\n", temperaturePrototypeConfig)
 
 	temperatureDeviceHandler := &SnmpTemperature
 	fmt.Printf("temperatureDeviceHandler: %+v\n", temperatureDeviceHandler)
 
-	voltagePrototypeConfig := FindPrototypeConfigByType(prototypeConfigs, "voltage")
+	voltagePrototypeConfig := FindPrototypeConfigByType(
+		prototypeConfigs, "voltage")
 	fmt.Printf("voltagePrototypeConfig: %+v\n", voltagePrototypeConfig)
 
 	voltageDeviceHandler := &SnmpVoltage
@@ -375,7 +379,8 @@ func TestDevices(t *testing.T) { // nolint: gocyclo
 			t.Fatalf("Unknown type: %v", typ)
 		}
 
-		device, err := CreateDevice(snmpDevices[i], protoConfig, deviceHandler, plugin)
+		device, err := CreateDevice(
+			snmpDevices[i], protoConfig, deviceHandler, plugin)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -395,6 +400,10 @@ func TestDevices(t *testing.T) { // nolint: gocyclo
 			t.Fatal(err)
 		}
 		readings := context.Reading
+		// Each device currently has one reading,
+		if len(readings) != 1 {
+			t.Fatalf("Expected 1 reading for device[%d], got %d", i, len(readings))
+		}
 		for j := 0; j < len(readings); j++ {
 			fmt.Printf("Reading[%d][%d]: %T, %+v\n", i, j, readings[j], readings[j])
 		}

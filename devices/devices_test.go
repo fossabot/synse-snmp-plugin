@@ -11,49 +11,6 @@ import (
 	"github.com/vapor-ware/synse-snmp-plugin/snmp/mibs/ups_mib"
 )
 
-/*
-// FindDevicesConfigsByType returns all elements in a DeviceConfig array where
-// the Type is t.
-// TODO: Could some of these be SDK helper functions? Maybe?
-func FindDeviceConfigsByType(devices []*config.DeviceConfig, t string) (
-	matches []*config.DeviceConfig, err error) {
-	if devices == nil {
-		return nil, fmt.Errorf("devices is nil")
-	}
-
-	for i := 0; i < len(devices); i++ {
-		if devices[i].Type == t {
-			matches = append(matches, devices[i])
-		}
-	}
-	return matches, err
-}
-
-// DumpDevices utility function.
-func DumpDeviceConfigs(devices []*config.DeviceConfig, header string) {
-	fmt.Printf("Dumping Devices. ")
-	fmt.Print(header)
-
-	if devices == nil {
-		fmt.Printf(" <nil>\n")
-		return
-	}
-
-	fmt.Printf(". Count: %d\n", len(devices))
-
-	for i := 0; i < len(devices); i++ {
-		fmt.Printf("device[%d]: %v %v %v %v %v row:%v column:%v\n", i,
-			devices[i].Data["table_name"],
-			devices[i].Type,
-			devices[i].Data["info"],
-			devices[i].Data["oid"],
-			devices[i].Data["base_oid"],
-			devices[i].Data["row"],
-			devices[i].Data["column"])
-	}
-}
-*/
-
 // ParseProtoypeConfigs is a wrapper around config.ParsePrototyeConfig() that
 // takes a directory parameter for sanity.
 func ParsePrototypeConfigs(prototypeDirectory string) (

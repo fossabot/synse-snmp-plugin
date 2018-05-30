@@ -7,8 +7,7 @@ import (
 	"github.com/vapor-ware/synse-sdk/sdk/config"
 	"github.com/vapor-ware/synse-snmp-plugin/devices"
 	"github.com/vapor-ware/synse-snmp-plugin/snmp/core"
-	mibs "github.com/vapor-ware/synse-snmp-plugin/snmp/mibs/ups_mib"
-	//"github.com/vapor-ware/synse-snmp-plugin/snmp/mibs/ups_mib"
+	"github.com/vapor-ware/synse-snmp-plugin/snmp/mibs/ups_mib"
 )
 
 // This file supports the PXGMS UPS + EATON 93PM SNMP Server.
@@ -41,14 +40,9 @@ func ParseDeviceConfigs(deviceDirectory string) (
 
 // PxgmsUps represents the PXGMS UPS + EATON 93PM SNMP Server.
 type PxgmsUps struct {
-	*core.SnmpServerBase // base class.
-	// TODO: Mibs *[]core.Mib, // Pointers to the mibs that we support for this device. // TODO: Want the derrived class here.
-	UpsMib *mibs.UpsMib // Supported Mibs.
-	// TODO: Devices []*DeviceConfig // Supported devices.
-	//Devices []*DeviceConfig // Supported devices.
-	//DeviceConfigs []*core.DeviceConfig
-	//DeviceConfigs []*sdk.DeviceConfig
-	DeviceConfigs []*config.DeviceConfig
+	*core.SnmpServerBase                        // base class.
+	UpsMib               *mibs.UpsMib           // Supported Mibs.
+	DeviceConfigs        []*config.DeviceConfig // Enumerated device configs.
 }
 
 // NewPxgmsUps creates the PxgmsUps structure.
@@ -69,7 +63,6 @@ func NewPxgmsUps() (ups *PxgmsUps, err error) { // nolint: gocyclo
 	}
 
 	// Find the right one. For now there is only one.
-	//upses, err := FindDeviceConfigsByModel(deviceConfigs, "PXGMS_UPS") // TODO: String should be PXGMS UPS, not PXGMS_UPS if possible.
 	upsDeviceConfigs, err := devices.FindDeviceConfigsByModel(deviceConfigs, "PXGMS_UPS") // TODO: String should be PXGMS UPS, not PXGMS_UPS if possible.
 	if err != nil {
 		return nil, err
@@ -128,17 +121,15 @@ func NewPxgmsUps() (ups *PxgmsUps, err error) { // nolint: gocyclo
 		return nil, err
 	}
 
-	//fmt.Printf("snmpDevices: %+v\n", snmpDevices)
+	// Output enumerated devices.
 	for i := 0; i < len(snmpDevices); i++ {
 		fmt.Printf("snmpDevice[%d]: %+v\n", i, snmpDevices[i])
 	}
 
-	// TODO: Set up the object.
+	// Set up the object.
 	return &PxgmsUps{
 		SnmpServerBase: snmpServerBase,
 		UpsMib:         upsMib,
 		DeviceConfigs:  snmpDevices,
 	}, nil
-
-	//return nil, nil // TODO
 }

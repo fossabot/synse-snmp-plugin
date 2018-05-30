@@ -11,6 +11,7 @@ import (
 	"github.com/vapor-ware/synse-snmp-plugin/snmp/mibs/ups_mib"
 )
 
+/*
 // FindDevicesConfigsByType returns all elements in a DeviceConfig array where
 // the Type is t.
 // TODO: Could some of these be SDK helper functions? Maybe?
@@ -51,6 +52,7 @@ func DumpDeviceConfigs(devices []*config.DeviceConfig, header string) {
 			devices[i].Data["column"])
 	}
 }
+*/
 
 // ParseProtoypeConfigs is a wrapper around config.ParsePrototyeConfig() that
 // takes a directory parameter for sanity.
@@ -160,7 +162,7 @@ func TestDevices(t *testing.T) { // nolint: gocyclo
 		t.Fatal(err) // Fail the test.
 	}
 
-	// Create the UpsMib and dump it.
+	// Create the UpsMib.
 	testUpsMib, err := mibs.NewUpsMib(snmpServer)
 	if err != nil {
 		t.Fatal(err) // Fail the test.

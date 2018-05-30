@@ -19,3 +19,4 @@ devices:
         privacyProtocol: AES
         privacyPassphrase: privatus
         contextName: public
+        location: r1vec

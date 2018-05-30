@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/vapor-ware/synse-sdk/sdk"
+	"github.com/vapor-ware/synse-snmp-plugin/devices"
 )
 
 // Build time variables for setting the version info of a Plugin.
@@ -19,8 +20,10 @@ var (
 // through its device configuration.
 //
 // FIXME - this is just a stub for framing up the plugin
+// TODO: This will work for the initial cut. This may change later if/when
+// we need to support the entity mib and entity sensor mib.
 func DeviceIdentifier(data map[string]string) string {
-	return ""
+	return data["oid"]
 }
 
 func main() {
@@ -34,6 +37,19 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// TODO: We need to load the MIB from the configuration still.
+
+	// Register Device Handlers for all supported devices we interact with over SNMP.
+	plugin.RegisterDeviceHandlers(
+		&devices.SnmpCurrent,
+		&devices.SnmpFrequency,
+		&devices.SnmpIdentity,
+		&devices.SnmpPower,
+		&devices.SnmpStatus,
+		&devices.SnmpTemperature,
+		&devices.SnmpVoltage,
+	)
 
 	// Set build-time version info.
 	plugin.SetVersion(sdk.VersionInfo{

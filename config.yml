@@ -5,8 +5,12 @@ network:
   type: unix
   address: snmp.sock
 settings:
-  mode: parallel
+  mode: serial
   read:
     interval: 3s
+    buffer: 1024
   write:
     interval: 1s
+    buffer: 1024
+  transaction:
+    ttl: 30s

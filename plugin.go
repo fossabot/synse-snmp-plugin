@@ -1,10 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/vapor-ware/synse-sdk/sdk"
 	"github.com/vapor-ware/synse-snmp-plugin/devices"
+	"github.com/vapor-ware/synse-snmp-plugin/snmp/servers"
 )
 
 // Build time variables for setting the version info of a Plugin.
@@ -38,7 +40,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// TODO: We need to load the MIB from the configuration still.
+	// Load the MIB from the configuration still.
+	pxgmsUps, err := servers.NewPxgmsUps()
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("Initialized PxgmsUps: %+v\n", pxgmsUps)
 
 	// Register Device Handlers for all supported devices we interact with over SNMP.
 	plugin.RegisterDeviceHandlers(

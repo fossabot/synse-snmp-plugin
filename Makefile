@@ -55,6 +55,15 @@ docker:  ## Build the docker image
 		-t $(IMAGE_NAME):latest \
 		-t $(IMAGE_NAME):local .
 
+.PHONY: push
+push:
+	docker rmi vaporio/snmp-plugin:latest || true
+	docker build -f Dockerfile \
+		-t $(IMAGE_NAME):latest \
+		-t $(IMAGE_NAME):local .
+	docker push vaporio/snmp-plugin:latest
+
+
 .PHONY: fmt
 fmt:  ## Run goimports on all go files
 	find . -name '*.go' -not -wholename './vendor/*' | while read -r file; do goimports -w "$$file" || exit; done

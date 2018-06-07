@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/vapor-ware/synse-sdk/sdk/config"
+	"github.com/vapor-ware/synse-sdk/sdk/logger"
 )
 
 // This file contains utility functions. In the future we could put them in
@@ -24,9 +25,9 @@ func DumpDeviceConfigs(deviceConfigs []*config.DeviceConfig) {
 		fmt.Printf("No Device Configs to dump\n")
 		return
 	}
-	fmt.Printf("Found device %d configs.\n", len(deviceConfigs))
+	logger.Infof("Found device %d configs.\n", len(deviceConfigs))
 	for i := 0; i < len(deviceConfigs); i++ {
-		fmt.Printf("deviceConfig[%d] %T: %+v\n", i, deviceConfigs[i], deviceConfigs[i])
+		logger.Infof("deviceConfig[%d] %T: %+v\n", i, deviceConfigs[i], deviceConfigs[i])
 	}
 }
 

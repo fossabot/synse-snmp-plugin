@@ -42,11 +42,19 @@ func NewUpsMib(server *core.SnmpServerBase) (upsMib *UpsMib, err error) { // nol
 		return nil, fmt.Errorf("NewUpsMib, server is nil")
 	}
 
+	//logger.Debugf("UpsMib: server: %+v", server)
+	//logger.Debugf("UpsMib: server.SnmpClient: %+v", server.SnmpClient)
+	//logger.Debugf("UpsMib: server.SnmpClient.DeviceConfig: %+v", server.SnmpClient.DeviceConfig)
+	//logger.Debugf("UpsMib: server.SnmpClient.DeviceConfig.SecurityParameters: %+v", server.SnmpClient.DeviceConfig.SecurityParameters)
+	//logger.Debugf("UpsMib: server.DeviceConfig:  %+v", server.DeviceConfig)
+
 	// Initialize Tables.
 	upsIdentityTable, err := NewUpsIdentityTable(server)
 	if err != nil {
 		return nil, err
 	}
+
+	logger.Debugf("UpsMib: Initialized first table")
 
 	upsBatteryTable, err := NewUpsBatteryTable(server)
 	if err != nil {
@@ -209,5 +217,7 @@ func NewUpsMib(server *core.SnmpServerBase) (upsMib *UpsMib, err error) { // nol
 	upsMib.UpsSubsetGroupsTable.Mib = upsMib
 	upsMib.UpsBasicGroupsTable.Mib = upsMib
 	upsMib.UpsFullGroupsTable.Mib = upsMib
+
+	logger.Debugf("Initialized UpsMib")
 	return upsMib, nil
 }

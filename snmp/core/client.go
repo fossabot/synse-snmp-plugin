@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/soniah/gosnmp"
+	"github.com/vapor-ware/synse-sdk/sdk/logger"
 )
 
 // AuthenticationProtocol enumeration for authentication algorithms.
@@ -367,10 +368,15 @@ func (client *SnmpClient) createGoSNMP() (*gosnmp.GoSNMP, error) {
 		ContextName: client.DeviceConfig.ContextName,
 	}
 
+	//logger.Debugf("*** Created gosnmp: %+v", goSnmp)
+	//fmt.Printf("*** Created gosnmp: %+v\n", goSnmp)
+
 	// Connect
 	err := goSnmp.Connect()
 	if err != nil {
-		return nil, fmt.Errorf("Failed to connect: %+v", goSnmp)
+		logger.Error("gosnmp failed to connect")
+		//fmt.Printf("*** gosnmp failed to connect\n")
+		return nil, fmt.Errorf("Failed to connect gosnmp: %+v", err)
 	}
 	return goSnmp, err
 }

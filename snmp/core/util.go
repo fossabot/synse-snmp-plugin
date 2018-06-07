@@ -2,6 +2,8 @@ package core
 
 import (
 	"fmt"
+
+	"github.com/vapor-ware/synse-sdk/sdk/config"
 )
 
 // This file contains utility functions. In the future we could put them in
@@ -14,6 +16,18 @@ func CopyMapStringString(m map[string]string) map[string]string {
 		target[k] = v
 	}
 	return target
+}
+
+// DumpDeviceConfigs to stdout.
+func DumpDeviceConfigs(deviceConfigs []*config.DeviceConfig) {
+	if deviceConfigs == nil {
+		fmt.Printf("No Device Configs to dump\n")
+		return
+	}
+	fmt.Printf("Found device %d configs.\n", len(deviceConfigs))
+	for i := 0; i < len(deviceConfigs); i++ {
+		fmt.Printf("deviceConfig[%d] %T: %+v\n", i, deviceConfigs[i], deviceConfigs[i])
+	}
 }
 
 // GetRackAndBoard pulls the rack and board ids out of data.

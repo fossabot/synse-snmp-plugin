@@ -6,6 +6,7 @@ import (
 
 	"github.com/vapor-ware/synse-sdk/sdk"
 	"github.com/vapor-ware/synse-snmp-plugin/devices"
+	"github.com/vapor-ware/synse-snmp-plugin/snmp/core"
 	"github.com/vapor-ware/synse-snmp-plugin/snmp/servers"
 )
 
@@ -46,6 +47,10 @@ func main() {
 		log.Fatal(err)
 	}
 	fmt.Printf("Initialized PxgmsUps: %+v\n", pxgmsUps)
+
+	// Dump PxgmsUps device configurations.
+	//core.util.DumpDeviceConfigs(pxgmsUps.DeviceConfigs)
+	core.DumpDeviceConfigs(pxgmsUps.DeviceConfigs)
 
 	// Register Device Handlers for all supported devices we interact with over SNMP.
 	plugin.RegisterDeviceHandlers(

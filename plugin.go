@@ -9,6 +9,7 @@ import (
 	"github.com/vapor-ware/synse-snmp-plugin/devices"
 	"github.com/vapor-ware/synse-snmp-plugin/snmp/core"
 	"github.com/vapor-ware/synse-snmp-plugin/snmp/servers"
+	"github.com/vapor-ware/synse-sdk/sdk/config"
 )
 
 // Build time variables for setting the version info of a Plugin.
@@ -30,11 +31,31 @@ func DeviceIdentifier(data map[string]string) string {
 	return data["oid"]
 }
 
+// Emunerator is the function that will generate the device configs dynamically for the
+// SNMP devices.
+// FIXME (etd): this could be moved to its own package, keeping it here for now though..
+func Enumerator(data map[string]interface{}) ([]*config.DeviceConfig, error) {
+	// Load the MIB from the configuration still.
+	logger.Info("SNMP Plugin initializing UPS.")
+	pxgmsUps, err := servers.NewPxgmsUps(data)
+	if err != nil {
+		// FIXME: we could also return this error
+		log.Fatalf("FATAL SNMP PLUGIN ERROR (NewPxgmsUps): %v", err)
+	}
+	logger.Infof("Initialized PxgmsUps: %+v\n", pxgmsUps)
+
+	// Dump PxgmsUps device configurations.
+	logger.Info("SNMP Plugin Dumping device configs")
+	core.DumpDeviceConfigs(pxgmsUps.DeviceConfigs)
+
+	return pxgmsUps.DeviceConfigs, nil
+}
+
 func main() {
 	logger.Info("SNMP Plugin start")
 
 	logger.Info("SNMP Plugin initializing handlers")
-	handlers, err := sdk.NewHandlers(DeviceIdentifier, nil)
+	handlers, err := sdk.NewHandlers(DeviceIdentifier, Enumerator)
 	if err != nil {
 		log.Fatalf("FATAL SNMP PLUGIN ERROR (NewHandlers): %v", err)
 	}
@@ -44,18 +65,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("FATAL SNMP PLUGIN ERROR (NewPlugin): %v", err)
 	}
-
-	// Load the MIB from the configuration still.
-	logger.Info("SNMP Plugin initializing UPS.")
-	pxgmsUps, err := servers.NewPxgmsUps()
-	if err != nil {
-		log.Fatalf("FATAL SNMP PLUGIN ERROR (NewPxgmsUps): %v", err)
-	}
-	logger.Infof("Initialized PxgmsUps: %+v\n", pxgmsUps)
-
-	// Dump PxgmsUps device configurations.
-	logger.Info("SNMP Plugin Dumping device configs")
-	core.DumpDeviceConfigs(pxgmsUps.DeviceConfigs)
 
 	// Register Device Handlers for all supported devices we interact with over SNMP.
 	logger.Info("SNMP Plugin registering device handlers")

@@ -13,4 +13,7 @@ COPY --from=builder /go/src/github.com/vapor-ware/synse-snmp-plugin/build/plugin
 COPY config.yml .
 COPY config/proto /etc/synse/plugin/config/proto
 
+# the plugin expects the default device directory to exist, even if nothing is in it
+RUN mkdir /etc/synse/plugin/config/device
+
 CMD ["./plugin"]

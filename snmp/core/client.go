@@ -2,12 +2,12 @@ package core
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 	"time"
 
 	"github.com/soniah/gosnmp"
 	"github.com/vapor-ware/synse-sdk/sdk/logger"
+	"strconv"
 )
 
 // AuthenticationProtocol enumeration for authentication algorithms.
